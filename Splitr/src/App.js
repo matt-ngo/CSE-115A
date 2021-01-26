@@ -1,6 +1,24 @@
 import React from 'react';
 import AppRouter from './AppRouter';
 import SharedContext from './SharedContext';
+import {ThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+
+// custom css: https://material-ui.com/customization/theming/
+const theme = createMuiTheme({
+  palette: {
+    background: {
+      default: '#f0efe7',
+    },
+    text: {
+      primary: '#1c1b1b',
+    },
+  },
+  typography: {
+    fontFamily: [
+      'Fira Code',
+      'monospace',
+    ].join(','),
+  }});
 
 // Temporary data for testing
 const TEST_RECEIPT_ITEMS = [
@@ -28,16 +46,18 @@ function App() {
   const [fees, setFees] = React.useState(TEST_FEES);
 
   return (
-    <SharedContext.Provider
-      value={{
-        fees,
-        receiptItems,
-        setFees,
-        setReceiptItems,
-      }}
-    >
-      <AppRouter/>
-    </SharedContext.Provider>
+    <ThemeProvider theme={theme}>
+      <SharedContext.Provider
+        value={{
+          fees,
+          receiptItems,
+          setFees,
+          setReceiptItems,
+        }}
+      >
+        <AppRouter/>
+      </SharedContext.Provider>
+    </ThemeProvider>
   );
 }
 
