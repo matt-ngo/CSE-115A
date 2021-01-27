@@ -12,6 +12,9 @@ const theme = createMuiTheme({
     text: {
       primary: '#1c1b1b',
     },
+    primary: {
+      main: '#074EE8',
+    },
   },
   typography: {
     fontFamily: [
@@ -45,6 +48,9 @@ function App() {
   // Global state of fees (taxes, tips, etc) initialized to test data
   const [fees, setFees] = React.useState(TEST_FEES);
 
+  // Declaration here to allow manual input option -> edit state on
+  const [isEditing, setIsEditing] = React.useState(false);
+
   return (
     <ThemeProvider theme={theme}>
       <SharedContext.Provider
@@ -53,6 +59,8 @@ function App() {
           receiptItems,
           setFees,
           setReceiptItems,
+          isEditing,
+          setIsEditing,
         }}
       >
         <AppRouter/>

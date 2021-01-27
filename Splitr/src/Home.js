@@ -4,7 +4,8 @@ import {useHistory} from 'react-router-dom';
 import {makeStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+// import Typography from '@material-ui/core/Typography';
 import {Alert} from '@material-ui/lab';
 import Button from '@material-ui/core/Button';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
@@ -17,7 +18,11 @@ import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
+    display: 'block',
+    maxWidth: '400px',
+    margin: 'auto',
+  },
+  brandHeader: {
     textAlign: 'center',
   },
   alert: {
@@ -29,7 +34,22 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  paper: {
+    width: 'auto',
+    minHeight: '200px',
+  },
+  buttonContainer: {
+    display: 'block',
+    padding: '20%',
+    // paddingTop: '20%',
+    textAlign: 'center',
+  },
+  imageitem: {
+    contentAlign: 'center',
+    textAlign: 'center',
+  },
 }));
+
 
 /**
  * Converts dataURL to Blob
@@ -65,143 +85,162 @@ function Home() {
     setImages(imageList);
   };
 
-  const {setReceiptItems, setFees} = useContext(SharedContext);
+  const {
+    setReceiptItems,
+    setFees,
+    setIsEditing,
+  } = useContext(SharedContext);
 
   const history = useHistory();
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Container maxWidth="md">
-        <Typography variant="h1">SPLITR</Typography>
-        <ImageUploading
-          value={images}
-          onChange={onChange}
-          maxNumber={maxNumber}
-          dataURLKey="data_url"
-          acceptType={acceptType}
-          maxFileSize={maxFileSize}
-        >
-          {({
-            imageList,
-            onImageUpload,
-            onImageUpdate,
-            onImageRemove,
-            isDragging,
-            dragProps,
-            errors,
-          }) => (
-            <div className="upload__image-wrapper">
-              {errors && (
-                <div>
-                  {errors.maxNumber && (
-                    <Alert severity="error">
-                      Number of selected files exceeds the limit of {maxNumber}
-                    </Alert>
-                  )}
-                  {errors.acceptType && (
-                    <Alert severity="error">
-                      Selected file type is not supported. Supported:{' '}
-                      {acceptType.join(', ')}
-                    </Alert>
-                  )}
-                  {errors.maxFileSize && (
-                    <Alert severity="error">
-                      Selected file size exceeds the limit of{' '}
-                      {maxFileSize / 1000000} MB
-                    </Alert>
-                  )}
-                </div>
-              )}
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                startIcon={<CameraAltOutlinedIcon />}
-                onClick={onImageUpload}
-                {...dragProps}
-              >
-                Upload Receipt
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                startIcon={<BorderColorOutlinedIcon />}
-                onClick={() => {
-                  alert(
-                      'Manual Input - This feature is not currently supported.',
-                  );
-                }}
-              >
-                Manual Input
-              </Button>
-              {imageList.map((image, index) => (
-                <div key={index} className="image-item">
-                  <img
-                    src={image.data_url}
-                    alt="Receipt"
-                    style={{maxWidth: '100%'}}
-                  />
-                  <div className="image-item__btn-wrapper">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      onClick={() => {
-                        const blob = dataURLtoBlob(image.data_url);
-                        const formData = new FormData();
-                        formData.append('imageFile', blob);
-                        const config = {
-                          headers: {
-                            'apiKey': 'c74b7524-1001-4a28-a88f-c77a65c02a64',
-                            'content-type': 'multipart/form-data',
-                          },
-                        };
-                        axios
-                            .post(
-                                'https://api.cloudmersive.com' +
-                              '/ocr/photo/recognize/receipt',
-                                formData,
-                                config,
-                            )
-                            .then((response) => {
-                              console.log('Success!');
-                              console.log(response);
-                              const receiptItems = [];
-                              response.data.ReceiptItems.forEach((item) => {
-                                receiptItems.push({
-                                  name: item.ItemDescription,
-                                  price: item.ItemPrice,
-                                });
-                              });
-                              setReceiptItems(receiptItems);
-                              setFees({
-                                tax: (
-                                  response.data.ReceiptTotal -
-                                response.data.ReceiptSubTotal
-                                )
-                                    .toFixed(2)
-                                    .toString(),
-                                tip: '0.00',
-                              });
-                              history.push('/confirm');
-                            })
-                            .catch((error) => {
-                              console.log('Error!');
-                              console.log(error);
-                            });
-                      }}
-                    >
-                      Process
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </ImageUploading>
+      <Container className={classes.brandHeader} maxWidth="md">
+        <h1>SPLITR</h1>
       </Container>
+      <Paper className={classes.paper}>
+        <Container maxWidth="md">
+          <ImageUploading
+            value={images}
+            onChange={onChange}
+            maxNumber={maxNumber}
+            dataURLKey="data_url"
+            acceptType={acceptType}
+            maxFileSize={maxFileSize}
+          >
+            {({
+              imageList,
+              onImageUpload,
+              onImageUpdate,
+              onImageRemove,
+              isDragging,
+              dragProps,
+              errors,
+            }) => (
+              <div className="upload__image-wrapper">
+                {errors && (
+                  <div>
+                    {errors.maxNumber && (
+                      <Alert severity="error">
+                      Number of selected files exceeds the limit of {maxNumber}
+                      </Alert>
+                    )}
+                    {errors.acceptType && (
+                      <Alert severity="error">
+                      Selected file type is not supported. Supported:{' '}
+                        {acceptType.join(', ')}
+                      </Alert>
+                    )}
+                    {errors.maxFileSize && (
+                      <Alert severity="error">
+                      Selected file size exceeds the limit of{' '}
+                        {maxFileSize / 1000000} MB
+                      </Alert>
+                    )}
+                  </div>
+                )}
+                <div className={classes.buttonContainer}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<CameraAltOutlinedIcon />}
+                    onClick={onImageUpload}
+                    {...dragProps}
+                  >
+                Upload Receipt
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<BorderColorOutlinedIcon />}
+                    onClick={() => {
+                      setReceiptItems([]);
+                      setFees({
+                        tax: '0.00',
+                        tip: '0.00',
+                      });
+                      setIsEditing(true);
+                      history.push('/confirm');
+                    }}
+                  >
+                Manual Input
+                  </Button>
+                </div>
+                {imageList.map((image, index) => (
+                  <div key={index} className="imageitem">
+                    <img
+                      src={image.data_url}
+                      alt="Receipt"
+                      style={{
+                        maxWidth: '100%',
+                        display: 'block',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                      }}
+                    />
+                    <div className={classes.buttonContainer}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        onClick={() => {
+                          const blob = dataURLtoBlob(image.data_url);
+                          const formData = new FormData();
+                          formData.append('imageFile', blob);
+                          const config = {
+                            headers: {
+                              'apiKey': 'c74b7524-1001-4a28-a88f-c77a65c02a64',
+                              'content-type': 'multipart/form-data',
+                            },
+                          };
+                          axios
+                              .post(
+                                  'https://api.cloudmersive.com' +
+                              '/ocr/photo/recognize/receipt',
+                                  formData,
+                                  config,
+                              )
+                              .then((response) => {
+                                console.log('Success!');
+                                console.log(response);
+                                const receiptItems = [];
+                                response.data.ReceiptItems.forEach((item) => {
+                                  receiptItems.push({
+                                    name: item.ItemDescription,
+                                    price: item.ItemPrice,
+                                  });
+                                });
+                                setReceiptItems(receiptItems);
+                                setFees({
+                                  tax: (
+                                    response.data.ReceiptTotal -
+                                response.data.ReceiptSubTotal
+                                  )
+                                      .toFixed(2)
+                                      .toString(),
+                                  tip: '0.00',
+                                });
+                                history.push('/confirm');
+                              })
+                              .catch((error) => {
+                                console.log('Error!');
+                                console.log(error);
+                              });
+                        }}
+                      >
+                      Process
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </ImageUploading>
+        </Container>
+      </Paper>
     </div>
   );
 }

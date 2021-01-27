@@ -80,13 +80,13 @@ const calculateTotal = (items, fees) => {
 function Confirm() {
   const classes = useStyles();
 
-  const [isEditing, setIsEditing] = React.useState(false);
-
   const {
     fees,
     receiptItems,
     setFees,
     setReceiptItems,
+    isEditing,
+    setIsEditing,
   } = useContext(SharedContext);
 
   const onNameChange = (event, idx) => {
@@ -228,7 +228,9 @@ function Confirm() {
       </Container>
       <Paper className={classes.paper}>
         <Toolbar>
-          <Typography variant="h6">Confirm Receipt</Typography>
+          <Typography variant="h6">
+            {isEditing ? 'Edit Receipt' : 'Select Items'}
+          </Typography>
           <IconButton
             className={classes.editIconButton}
             edge="end"
