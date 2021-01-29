@@ -17,6 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import Checkbox from '@material-ui/core/Checkbox';
 import SharedContext from './SharedContext';
 
 const useStyles = makeStyles((theme) => ({
@@ -119,10 +120,31 @@ function Confirm() {
     setReceiptItems(newItems);
   };
 
+  const onSelectItem = (idx) => {
+    const newItems = [...receiptItems];
+    newItems[idx].isSelected = !newItems[idx].isSelected;
+    setReceiptItems(newItems);
+  };
+
+  const onToggleEdit = () => {
+    const newItems = receiptItems.filter((item) =>
+      (item.name != '' && item.price != ''));
+    setReceiptItems(newItems);
+    setIsEditing(!isEditing);
+  };
+
   const receiptContent = (
     <TableBody>
       {receiptItems.map((item, idx) => (
         <TableRow key={idx}>
+          <TableCell>
+            {
+              (
+                <Checkbox color="primary"
+                  onClick={()=>onSelectItem(idx)}></Checkbox>
+              )
+            }
+          </TableCell>
           <TableCell>
             {isEditing ? (
             <TextField
@@ -234,7 +256,7 @@ function Confirm() {
           <IconButton
             className={classes.editIconButton}
             edge="end"
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={onToggleEdit}
           >
             {isEditing ? <SaveIcon/> : <EditIcon />}
           </IconButton>

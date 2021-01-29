@@ -25,17 +25,18 @@ const theme = createMuiTheme({
 
 // Temporary data for testing
 const TEST_RECEIPT_ITEMS = [
-  {name: 'Frozen yoghurt', price: '6.50'},
-  {name: 'Ice cream sandwich', price: '4.99'},
-  {name: 'Eclair', price: '10.00'},
-  {name: 'Cupcake', price: '2.99'},
-  {name: 'Gingerbread', price: '1.99'},
+  {name: 'Frozen yoghurt', price: '6.50', isSelected: false},
+  {name: 'Ice cream sandwich', price: '4.99', isSelected: false},
+  {name: 'Eclair', price: '10.00', isSelected: false},
+  {name: 'Cupcake', price: '2.99', isSelected: false},
+  {name: 'Gingerbread', price: '1.99', isSelected: false},
 ];
 
 const TEST_FEES = {
   tax: '0.00',
   tip: '0.00',
 };
+
 
 /**
  *
