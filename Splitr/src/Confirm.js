@@ -134,19 +134,27 @@ function Confirm() {
 
   const onToggleEdit = () => {
     let canSave = true;
-    const newItems = receiptItems.filter((item) =>
-      (item.name != '')).map((item)=>{
-      let isValid = true;
-      if (item.price == '') {
-        canSave = false;
-        isValid = false;
+    if (isEditing) {
+      const newItems = receiptItems.filter((item) =>
+        (item.name != '')).map((item)=>{
+        let isValid = true;
+        // Format price
+        let newPrice = item.price;
+        if (/^.$/) {
+          newPrice = `${newPrice}00`;
+        }
+        if (item.price == '') {
+          canSave = false;
+          isValid = false;
+        }
+        return {...item, isValid, price: newPrice};
+      });
+      setReceiptItems(newItems);
+      if (canSave) {
+        setIsEditing(false);
       }
-      return {...item, isValid};
-    });
-    setReceiptItems(newItems);
-    if (canSave) {
-      setIsEditing(!isEditing);
     }
+    setIsEditing(true);
   };
 
   const receiptContent = (
