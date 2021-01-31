@@ -62,6 +62,9 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     marginLeft: theme.spacing(3),
   },
+  nextButton: {
+    margin: '1rem auto',
+  },
 }));
 
 const calculateTotal = (items, fees) => {
@@ -138,13 +141,14 @@ function Confirm() {
       const newItems = receiptItems.filter((item) =>
         (item.name != '')).map((item)=>{
         let isValid = true;
-        // Format price
+
+        // Format prices upon save
         let newPrice = item.price === '.' ? '' : item.price;
-        console.log(newPrice);
         if (newPrice) {
           newPrice = parseFloat(item.price);
           newPrice = newPrice.toFixed(2);
         }
+
         if (newPrice == '') {
           canSave = false;
           isValid = false;
@@ -199,6 +203,9 @@ function Confirm() {
                 className={classes.priceField}
                 placeholder="0.00"
                 value={item.price}
+                error = {!item.isValid}
+                id="standard-error"
+                helperText={item.isValid ? '' : 'Price is required'}
                 InputProps={{
                   classes: {
                     input: classes.priceTextField,
@@ -297,7 +304,8 @@ function Confirm() {
         <Table>
           <TableHead>
             <TableRow key="header">
-              <TableCell className={classes.tableHeader}>Item</TableCell>
+              <TableCell className={classes.tableHeader}
+              >Item</TableCell>
               <TableCell className={classes.tableHeader} align="right">
                 Price
               </TableCell>
@@ -320,7 +328,15 @@ function Confirm() {
         <Table size="small">
           {feesContent}
         </Table>
+        {!isEditing && (
+          <div style={{display: 'flex'}}>
+            <Button className={classes.nextButton}
+              color="primary" variant="contained">Next</Button>
+          </div>
+        )}
+
       </Paper>
+
     </div>
   );
 }
