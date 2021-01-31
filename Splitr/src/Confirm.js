@@ -67,7 +67,9 @@ const useStyles = makeStyles((theme) => ({
 const calculateTotal = (items, fees) => {
   let total = 0;
   items.forEach((item) => {
-    total += parseFloat(item.price);
+    if (item.isSelected) {
+      total += parseFloat(item.price);
+    }
   });
   total += parseFloat(fees.tax) + parseFloat(fees.tip);
   if (!total) return 0;
@@ -98,6 +100,10 @@ function Confirm() {
   };
 
   const onPriceChange = (event, idx) => {
+    const isNum = /^\d*\.*\d{0,2}$/.test(event.target.value);
+    if (!isNum) {
+      return;
+    }
     const newItems = [...receiptItems];
     newItems[idx].price = event.target.value;
     setReceiptItems(newItems);
