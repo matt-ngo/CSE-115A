@@ -100,7 +100,7 @@ function Confirm() {
   };
 
   const onPriceChange = (event, idx) => {
-    const isNum = /^\d*\.*\d{0,2}$/.test(event.target.value);
+    const isNum = /^\d*\.{0,1}\d{0,2}$/.test(event.target.value);
     if (!isNum) {
       return;
     }
@@ -139,11 +139,13 @@ function Confirm() {
         (item.name != '')).map((item)=>{
         let isValid = true;
         // Format price
-        let newPrice = item.price;
-        if (/^.$/) {
-          newPrice = `${newPrice}00`;
+        let newPrice = item.price === '.' ? '' : item.price;
+        console.log(newPrice);
+        if (newPrice) {
+          newPrice = parseFloat(item.price);
+          newPrice = newPrice.toFixed(2);
         }
-        if (item.price == '') {
+        if (newPrice == '') {
           canSave = false;
           isValid = false;
         }
@@ -153,8 +155,9 @@ function Confirm() {
       if (canSave) {
         setIsEditing(false);
       }
+    } else {
+      setIsEditing(true);
     }
-    setIsEditing(true);
   };
 
   const receiptContent = (
