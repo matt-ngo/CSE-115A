@@ -65,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
   nextButton: {
     margin: '1rem auto',
   },
+  selectBox: {
+    width: '50px',
+  },
 }));
 
 const calculateTotal = (items, fees) => {
@@ -174,7 +177,7 @@ function Confirm() {
               {}
           }
         >
-          <TableCell>
+          <TableCell className= {classes.selectBox}>
             {
               (
                 <Checkbox color="primary"
