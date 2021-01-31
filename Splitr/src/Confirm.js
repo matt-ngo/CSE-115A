@@ -19,6 +19,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Checkbox from '@material-ui/core/Checkbox';
 import SharedContext from './SharedContext';
+import {DEFAULT_ITEM} from './DefaultValues';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -110,8 +111,7 @@ function Confirm() {
   };
 
   const handleAddItemClick = () => {
-    const newItem = {name: '', price: ''};
-    setReceiptItems([...receiptItems, newItem]);
+    setReceiptItems([...receiptItems, {...DEFAULT_ITEM}]);
   };
 
   const handleRemoveItemClick = (idx) => {
@@ -127,16 +127,32 @@ function Confirm() {
   };
 
   const onToggleEdit = () => {
+    let canSave = true;
     const newItems = receiptItems.filter((item) =>
-      (item.name != '' && item.price != ''));
+      (item.name != '')).map((item)=>{
+      let isValid = true;
+      if (item.price == '') {
+        canSave = false;
+        isValid = false;
+      }
+      return {...item, isValid};
+    });
     setReceiptItems(newItems);
-    setIsEditing(!isEditing);
+    if (canSave) {
+      setIsEditing(!isEditing);
+    }
   };
 
   const receiptContent = (
     <TableBody>
       {receiptItems.map((item, idx) => (
-        <TableRow key={idx}>
+        <TableRow key={idx}
+          style={!item.isValid ?
+            {borderStyle: 'dashed',
+              borderColor: 'red'}:
+              {}
+          }
+        >
           <TableCell>
             {
               (
