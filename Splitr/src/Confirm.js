@@ -307,8 +307,10 @@ function Confirm() {
         <Table>
           <TableHead>
             <TableRow key="header">
-              <TableCell className={classes.tableHeader}
-              >Item</TableCell>
+              <TableCell className={classes.tableHeader}>
+                Item
+              </TableCell>
+              <TableCell></TableCell>
               <TableCell className={classes.tableHeader} align="right">
                 Price
               </TableCell>
