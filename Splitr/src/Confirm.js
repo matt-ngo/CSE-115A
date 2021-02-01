@@ -24,14 +24,16 @@ import {DEFAULT_ITEM} from './DefaultValues';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'block',
-    maxWidth: '400px',
+    maxWidth: '450px',
     margin: 'auto',
+    padding: '20px',
   },
   brandHeader: {
     textAlign: 'center',
   },
   paper: {
     width: 'auto',
+    boxShadow: '7px 8px 15px grey',
   },
   itemsTable: {
     marginBottom: theme.spacing(2),
@@ -67,6 +69,10 @@ const useStyles = makeStyles((theme) => ({
   },
   selectBox: {
     width: '50px',
+  },
+  totalFooter: {
+    paddingTop: '15px',
+    paddingBottom: '20px',
   },
 }));
 
@@ -318,6 +324,18 @@ function Confirm() {
           </TableHead>
           {receiptContent}
         </Table>
+
+        <div className={classes.totalFooter}>
+          <Table size="small">
+            {feesContent}
+          </Table>
+          {!isEditing && (
+            <div style={{display: 'flex'}}>
+              <Button className={classes.nextButton}
+                color="primary" variant="contained">Next</Button>
+            </div>
+          )}
+        </div>
       </Paper>
       {isEditing ? (
         <Button
@@ -329,18 +347,6 @@ function Confirm() {
           Add Item +
         </Button>
       ) : <div/>}
-      <Paper className={classes.paper}>
-        <Table size="small">
-          {feesContent}
-        </Table>
-        {!isEditing && (
-          <div style={{display: 'flex'}}>
-            <Button className={classes.nextButton}
-              color="primary" variant="contained">Next</Button>
-          </div>
-        )}
-
-      </Paper>
 
     </div>
   );
