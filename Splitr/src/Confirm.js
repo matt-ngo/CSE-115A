@@ -17,7 +17,9 @@ import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import Checkbox from '@material-ui/core/Checkbox';
 import SharedContext from './SharedContext';
+import {DEFAULT_ITEM} from './DefaultValues';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,12 +62,20 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     marginLeft: theme.spacing(3),
   },
+  nextButton: {
+    margin: '1rem auto',
+  },
+  selectBox: {
+    width: '50px',
+  },
 }));
 
 const calculateTotal = (items, fees) => {
   let total = 0;
   items.forEach((item) => {
-    total += parseFloat(item.price);
+    if (item.isSelected) {
+      total += parseFloat(item.price);
+    }
   });
   total += parseFloat(fees.tax) + parseFloat(fees.tip);
   if (!total) return 0;
@@ -96,6 +106,10 @@ function Confirm() {
   };
 
   const onPriceChange = (event, idx) => {
+    const isNum = /^\d*\.{0,1}\d{0,2}$/.test(event.target.value);
+    if (!isNum) {
+      return;
+    }
     const newItems = [...receiptItems];
     newItems[idx].price = event.target.value;
     setReceiptItems(newItems);
@@ -109,8 +123,7 @@ function Confirm() {
   };
 
   const handleAddItemClick = () => {
-    const newItem = {name: '', price: ''};
-    setReceiptItems([...receiptItems, newItem]);
+    setReceiptItems([...receiptItems, {...DEFAULT_ITEM}]);
   };
 
   const handleRemoveItemClick = (idx) => {
@@ -119,10 +132,59 @@ function Confirm() {
     setReceiptItems(newItems);
   };
 
+  const onSelectItem = (idx) => {
+    const newItems = [...receiptItems];
+    newItems[idx].isSelected = !newItems[idx].isSelected;
+    setReceiptItems(newItems);
+  };
+
+  const onToggleEdit = () => {
+    let canSave = true;
+    if (isEditing) {
+      const newItems = receiptItems.filter((item) =>
+        (item.name != '')).map((item)=>{
+        let isValid = true;
+
+        // Format prices upon save
+        let newPrice = item.price === '.' ? '' : item.price;
+        if (newPrice) {
+          newPrice = parseFloat(item.price);
+          newPrice = newPrice.toFixed(2);
+        }
+
+        if (newPrice == '') {
+          canSave = false;
+          isValid = false;
+        }
+        return {...item, isValid, price: newPrice};
+      });
+      setReceiptItems(newItems);
+      if (canSave) {
+        setIsEditing(false);
+      }
+    } else {
+      setIsEditing(true);
+    }
+  };
+
   const receiptContent = (
     <TableBody>
       {receiptItems.map((item, idx) => (
-        <TableRow key={idx}>
+        <TableRow key={idx}
+          style={!item.isValid ?
+            {borderStyle: 'dashed',
+              borderColor: 'red'}:
+              {}
+          }
+        >
+          <TableCell className= {classes.selectBox}>
+            {
+              (
+                <Checkbox color="primary"
+                  onClick={()=>onSelectItem(idx)}></Checkbox>
+              )
+            }
+          </TableCell>
           <TableCell>
             {isEditing ? (
             <TextField
@@ -144,6 +206,9 @@ function Confirm() {
                 className={classes.priceField}
                 placeholder="0.00"
                 value={item.price}
+                error = {!item.isValid}
+                id="standard-error"
+                helperText={item.isValid ? '' : 'Price is required'}
                 InputProps={{
                   classes: {
                     input: classes.priceTextField,
@@ -234,7 +299,7 @@ function Confirm() {
           <IconButton
             className={classes.editIconButton}
             edge="end"
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={onToggleEdit}
           >
             {isEditing ? <SaveIcon/> : <EditIcon />}
           </IconButton>
@@ -242,7 +307,8 @@ function Confirm() {
         <Table>
           <TableHead>
             <TableRow key="header">
-              <TableCell className={classes.tableHeader}>Item</TableCell>
+              <TableCell className={classes.tableHeader}
+              >Item</TableCell>
               <TableCell className={classes.tableHeader} align="right">
                 Price
               </TableCell>
@@ -265,7 +331,15 @@ function Confirm() {
         <Table size="small">
           {feesContent}
         </Table>
+        {!isEditing && (
+          <div style={{display: 'flex'}}>
+            <Button className={classes.nextButton}
+              color="primary" variant="contained">Next</Button>
+          </div>
+        )}
+
       </Paper>
+
     </div>
   );
 }
