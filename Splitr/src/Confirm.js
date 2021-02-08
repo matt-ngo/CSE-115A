@@ -79,13 +79,41 @@ const useStyles = makeStyles((theme) => ({
 const calculateTotal = (items, fees) => {
   let total = 0;
   items.forEach((item) => {
-    if (item.isSelected) {
-      total += parseFloat(item.price);
-    }
+    // if (item.isSelected) {
+    total += parseFloat(item.price);
+    // }
   });
   total += parseFloat(fees.tax) + parseFloat(fees.tip);
   if (!total) return 0;
   return total.toFixed(2);
+};
+
+const round = (num) => {
+  // using default JS round to the nearest integer
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+};
+
+const calculateSplit = (items, fees) => {
+  // get selected items
+  let selected = 0;
+  let total = 0;
+  items.forEach((item) => {
+    if (item.isSelected) {
+      selected += round(parseFloat(item.price) / item.shared);
+    }
+    total += parseFloat(item.price);
+  });
+  console.log('Selected:', selected, typeof(selected));
+  // calc % of total bill
+  const percentage = selected/total;
+  // calc and add fraction of tax and tip
+  selected += round(percentage * parseFloat(fees.tax).toFixed(2));
+  selected += round(percentage * parseFloat(fees.tip).toFixed(2));
+  console.log('tax:', round(percentage * parseFloat(fees.tax).toFixed(2)));
+  console.log('tip:', round(percentage * parseFloat(fees.tip).toFixed(2)));
+
+  if (!total) return 0;
+  return selected;
 };
 
 /**
@@ -291,6 +319,22 @@ function Confirm() {
     </TableBody>
   );
 
+  const splitContent = (
+    <TableBody>
+      <TableRow>
+        <TableCell className={classes.noGridLine} align="center">
+          <Typography variant="h6">
+        Your Split:
+            <br></br>
+            <div>
+              {`$${calculateSplit(receiptItems, fees)}`}
+            </div>
+          </Typography>
+        </TableCell>
+      </TableRow>
+    </TableBody>
+  );
+
   return (
     <div className={classes.root}>
       <CssBaseline/>
@@ -329,6 +373,11 @@ function Confirm() {
           <Table size="small">
             {feesContent}
           </Table>
+
+          <Table>
+            {splitContent}
+          </Table>
+
           {!isEditing && (
             <div style={{display: 'flex'}}>
               <Button className={classes.nextButton}
@@ -337,6 +386,7 @@ function Confirm() {
           )}
         </div>
       </Paper>
+
       {isEditing ? (
         <Button
           className={classes.addButton}
