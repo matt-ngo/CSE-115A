@@ -94,7 +94,6 @@ const round = (num) => {
 };
 
 const calculateSplit = (items, fees) => {
-  // get selected items
   let selected = 0;
   let total = 0;
   items.forEach((item) => {
@@ -103,14 +102,11 @@ const calculateSplit = (items, fees) => {
     }
     total += parseFloat(item.price);
   });
-  console.log('Selected:', selected, typeof(selected));
-  // calc % of total bill
   const percentage = selected/total;
   // calc and add fraction of tax and tip
   selected += round(percentage * parseFloat(fees.tax).toFixed(2));
   selected += round(percentage * parseFloat(fees.tip).toFixed(2));
-  console.log('tax:', round(percentage * parseFloat(fees.tax).toFixed(2)));
-  console.log('tip:', round(percentage * parseFloat(fees.tip).toFixed(2)));
+  selected += round(percentage * parseFloat(fees.misc).toFixed(2));
 
   if (!total) return 0;
   return selected;
