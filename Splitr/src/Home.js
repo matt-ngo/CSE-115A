@@ -10,6 +10,8 @@ import {Alert} from '@material-ui/lab';
 import Button from '@material-ui/core/Button';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
 import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 import SharedContext from './SharedContext';
 
 import ImageUploading from 'react-images-uploading';
@@ -50,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 /**
  * Converts dataURL to Blob
  * @param {String} dataurl
@@ -85,11 +86,8 @@ function Home() {
     setImages(imageList);
   };
 
-  const {
-    setReceiptItems,
-    setFees,
-    setIsEditing,
-  } = useContext(SharedContext);
+  const [loading, setLoading] = useState(false);
+  const {setReceiptItems, setFees, setIsEditing} = useContext(SharedContext);
 
   const history = useHistory();
 
@@ -123,18 +121,19 @@ function Home() {
                   <div>
                     {errors.maxNumber && (
                       <Alert severity="error">
-                      Number of selected files exceeds the limit of {maxNumber}
+                        Number of selected files exceeds the limit of{' '}
+                        {maxNumber}
                       </Alert>
                     )}
                     {errors.acceptType && (
                       <Alert severity="error">
-                      Selected file type is not supported. Supported:{' '}
+                        Selected file type is not supported. Supported:{' '}
                         {acceptType.join(', ')}
                       </Alert>
                     )}
                     {errors.maxFileSize && (
                       <Alert severity="error">
-                      Selected file size exceeds the limit of{' '}
+                        Selected file size exceeds the limit of{' '}
                         {maxFileSize / 1000000} MB
                       </Alert>
                     )}
@@ -149,7 +148,7 @@ function Home() {
                     onClick={onImageUpload}
                     {...dragProps}
                   >
-                Upload Receipt
+                    Upload Receipt
                   </Button>
                   <Button
                     variant="contained"
@@ -161,12 +160,13 @@ function Home() {
                       setFees({
                         tax: '0.00',
                         tip: '0.00',
+                        misc: '0.00',
                       });
                       setIsEditing(true);
                       history.push('/confirm');
                     }}
                   >
-                Manual Input
+                    Manual Input
                   </Button>
                 </div>
                 {imageList.map((image, index) => (
@@ -187,6 +187,8 @@ function Home() {
                         color="primary"
                         className={classes.button}
                         onClick={() => {
+                          setLoading(true);
+
                           const blob = dataURLtoBlob(image.data_url);
                           const formData = new FormData();
                           formData.append('imageFile', blob);
@@ -199,7 +201,7 @@ function Home() {
                           axios
                               .post(
                                   'https://api.cloudmersive.com' +
-                              '/ocr/photo/recognize/receipt',
+                                '/ocr/photo/recognize/receipt',
                                   formData,
                                   config,
                               )
@@ -217,7 +219,7 @@ function Home() {
                                 setFees({
                                   tax: (
                                     response.data.ReceiptTotal -
-                                response.data.ReceiptSubTotal
+                                  response.data.ReceiptSubTotal
                                   )
                                       .toFixed(2)
                                       .toString(),
@@ -230,9 +232,11 @@ function Home() {
                                 console.log(error);
                               });
                         }}
+                        disabled={loading}
                       >
-                      Process
+                        Process
                       </Button>
+                      {loading && <LinearProgress />}
                     </div>
                   </div>
                 ))}

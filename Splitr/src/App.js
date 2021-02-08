@@ -17,11 +17,9 @@ const theme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: [
-      'Fira Code',
-      'monospace',
-    ].join(','),
-  }});
+    fontFamily: ['Fira Code', 'monospace'].join(','),
+  },
+});
 
 // Temporary data for testing
 const TEST_RECEIPT_ITEMS = [
@@ -35,13 +33,14 @@ const TEST_RECEIPT_ITEMS = [
     isSelected: false, isValid: true, shared: 1},
   {name: 'Gingerbread', price: '1.99',
     isSelected: false, isValid: true, shared: 1},
+
 ];
 
 const TEST_FEES = {
   tax: '0.00',
   tip: '0.00',
+  misc: '0.00',
 };
-
 
 /**
  *
@@ -69,7 +68,7 @@ function App() {
           setIsEditing,
         }}
       >
-        <AppRouter/>
+        <AppRouter />
       </SharedContext.Provider>
     </ThemeProvider>
   );
