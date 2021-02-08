@@ -10,6 +10,8 @@ import {Alert} from '@material-ui/lab';
 import Button from '@material-ui/core/Button';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
 import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 import SharedContext from './SharedContext';
 
 import ImageUploading from 'react-images-uploading';
@@ -84,6 +86,7 @@ function Home() {
     setImages(imageList);
   };
 
+  const [loading, setLoading] = useState(false);
   const {setReceiptItems, setFees, setIsEditing} = useContext(SharedContext);
 
   const history = useHistory();
@@ -184,6 +187,8 @@ function Home() {
                         color="primary"
                         className={classes.button}
                         onClick={() => {
+                          setLoading(true);
+
                           const blob = dataURLtoBlob(image.data_url);
                           const formData = new FormData();
                           formData.append('imageFile', blob);
@@ -227,9 +232,11 @@ function Home() {
                                 console.log(error);
                               });
                         }}
+                        disabled={loading}
                       >
                         Process
                       </Button>
+                      {loading && <LinearProgress />}
                     </div>
                   </div>
                 ))}
