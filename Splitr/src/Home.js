@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 /**
  * Converts dataURL to Blob
  * @param {String} dataurl
@@ -85,11 +84,7 @@ function Home() {
     setImages(imageList);
   };
 
-  const {
-    setReceiptItems,
-    setFees,
-    setIsEditing,
-  } = useContext(SharedContext);
+  const {setReceiptItems, setFees, setIsEditing} = useContext(SharedContext);
 
   const history = useHistory();
 
@@ -123,18 +118,19 @@ function Home() {
                   <div>
                     {errors.maxNumber && (
                       <Alert severity="error">
-                      Number of selected files exceeds the limit of {maxNumber}
+                        Number of selected files exceeds the limit of{' '}
+                        {maxNumber}
                       </Alert>
                     )}
                     {errors.acceptType && (
                       <Alert severity="error">
-                      Selected file type is not supported. Supported:{' '}
+                        Selected file type is not supported. Supported:{' '}
                         {acceptType.join(', ')}
                       </Alert>
                     )}
                     {errors.maxFileSize && (
                       <Alert severity="error">
-                      Selected file size exceeds the limit of{' '}
+                        Selected file size exceeds the limit of{' '}
                         {maxFileSize / 1000000} MB
                       </Alert>
                     )}
@@ -149,7 +145,7 @@ function Home() {
                     onClick={onImageUpload}
                     {...dragProps}
                   >
-                Upload Receipt
+                    Upload Receipt
                   </Button>
                   <Button
                     variant="contained"
@@ -166,7 +162,7 @@ function Home() {
                       history.push('/confirm');
                     }}
                   >
-                Manual Input
+                    Manual Input
                   </Button>
                 </div>
                 {imageList.map((image, index) => (
@@ -199,7 +195,7 @@ function Home() {
                           axios
                               .post(
                                   'https://api.cloudmersive.com' +
-                              '/ocr/photo/recognize/receipt',
+                                '/ocr/photo/recognize/receipt',
                                   formData,
                                   config,
                               )
@@ -217,7 +213,7 @@ function Home() {
                                 setFees({
                                   tax: (
                                     response.data.ReceiptTotal -
-                                response.data.ReceiptSubTotal
+                                  response.data.ReceiptSubTotal
                                   )
                                       .toFixed(2)
                                       .toString(),
@@ -231,7 +227,7 @@ function Home() {
                               });
                         }}
                       >
-                      Process
+                        Process
                       </Button>
                     </div>
                   </div>
