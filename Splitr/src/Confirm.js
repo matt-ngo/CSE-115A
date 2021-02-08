@@ -83,7 +83,7 @@ const calculateTotal = (items, fees) => {
       total += parseFloat(item.price);
     }
   });
-  total += parseFloat(fees.tax) + parseFloat(fees.tip);
+  total += parseFloat(fees.tax) + parseFloat(fees.tip) + parseFloat(fees.misc);
   if (!total) return 0;
   return total.toFixed(2);
 };
@@ -147,23 +147,24 @@ function Confirm() {
   const onToggleEdit = () => {
     let canSave = true;
     if (isEditing) {
-      const newItems = receiptItems.filter((item) =>
-        (item.name != '')).map((item)=>{
-        let isValid = true;
+      const newItems = receiptItems
+          .filter((item) => item.name != '')
+          .map((item) => {
+            let isValid = true;
 
-        // Format prices upon save
-        let newPrice = item.price === '.' ? '' : item.price;
-        if (newPrice) {
-          newPrice = parseFloat(item.price);
-          newPrice = newPrice.toFixed(2);
-        }
+            // Format prices upon save
+            let newPrice = item.price === '.' ? '' : item.price;
+            if (newPrice) {
+              newPrice = parseFloat(item.price);
+              newPrice = newPrice.toFixed(2);
+            }
 
-        if (newPrice == '') {
-          canSave = false;
-          isValid = false;
-        }
-        return {...item, isValid, price: newPrice};
-      });
+            if (newPrice == '') {
+              canSave = false;
+              isValid = false;
+            }
+            return {...item, isValid, price: newPrice};
+          });
       setReceiptItems(newItems);
       if (canSave) {
         setIsEditing(false);
@@ -176,64 +177,67 @@ function Confirm() {
   const receiptContent = (
     <TableBody>
       {receiptItems.map((item, idx) => (
-        <TableRow key={idx}
-          style={!item.isValid ?
-            {borderStyle: 'dashed',
-              borderColor: 'red'}:
-              {}
+        <TableRow
+          key={idx}
+          style={
+            !item.isValid ? {borderStyle: 'dashed', borderColor: 'red'} : {}
           }
         >
-          <TableCell className= {classes.selectBox}>
+          <TableCell className={classes.selectBox}>
             {
-              (
-                <Checkbox color="primary"
-                  onClick={()=>onSelectItem(idx)}></Checkbox>
-              )
+              <Checkbox
+                color="primary"
+                onClick={() => onSelectItem(idx)}
+              ></Checkbox>
             }
           </TableCell>
           <TableCell>
             {isEditing ? (
-            <TextField
-              placeholder="eg. Cupcakes"
-              value={item.name}
-              InputProps={{
-                classes: {
-                  input: classes.itemTextField,
-                },
-              }}
-              onChange={(e) => onNameChange(e, idx)}
-            />
-            ) : item.name}
+              <TextField
+                placeholder="eg. Cupcakes"
+                value={item.name}
+                InputProps={{
+                  classes: {
+                    input: classes.itemTextField,
+                  },
+                }}
+                onChange={(e) => onNameChange(e, idx)}
+              />
+            ) : (
+              item.name
+            )}
           </TableCell>
           <TableCell align="right">
             {isEditing ? (
-            <div>
-              <TextField
-                className={classes.priceField}
-                placeholder="0.00"
-                value={item.price}
-                error = {!item.isValid}
-                id="standard-error"
-                helperText={item.isValid ? '' : 'Price is required'}
-                InputProps={{
-                  classes: {
-                    input: classes.priceTextField,
-                  },
-                  startAdornment: (
-                    <InputAdornment position="start">$</InputAdornment>
-                  ),
-                }}
-                onChange={(e) => onPriceChange(e, idx)}
-              />
-              <IconButton
-                className={classes.removeButton}
-                size="small"
-                onClick={() => handleRemoveItemClick(idx)}
-              >
-                <HighlightOffIcon/>
-              </IconButton>
-            </div>
-            ) : `$${item.price}`}
+              <div>
+                <TextField
+                  className={classes.priceField}
+                  placeholder="0.00"
+                  value={item.price}
+                  error={!item.isValid}
+                  id="standard-error"
+                  helperText={item.isValid ? '' : 'Price is required'}
+                  InputProps={{
+                    classes: {
+                      input: classes.priceTextField,
+                    },
+                    startAdornment: (
+                      <InputAdornment position="start">$</InputAdornment>
+                    ),
+                  }}
+                  onChange={(e) => onPriceChange(e, idx)}
+                />
+                <IconButton
+                  className={classes.removeButton}
+                  size="small"
+                  onClick={() => handleRemoveItemClick(idx)}
+                >
+                  <HighlightOffIcon />
+                </IconButton>
+              </div>
+            ) : (
+              `$${item.price}`
+            )}
           </TableCell>
         </TableRow>
       ))}
@@ -259,7 +263,9 @@ function Confirm() {
               }}
               onChange={(e) => onFeesChange(e, 'tax')}
             />
-          ) : `$${fees.tax}`}
+          ) : (
+            `$${fees.tax}`
+          )}
         </TableCell>
       </TableRow>
       <TableRow key="tip">
@@ -279,7 +285,31 @@ function Confirm() {
               }}
               onChange={(e) => onFeesChange(e, 'tip')}
             />
-            ) : `$${fees.tip}`}
+          ) : (
+            `$${fees.tip}`
+          )}
+        </TableCell>
+      </TableRow>
+      <TableRow key="misc">
+        <TableCell className={classes.noGridLine}>Misc. Fees</TableCell>
+        <TableCell className={classes.noGridLine} align="right">
+          {isEditing ? (
+            <TextField
+              className={classes.priceField}
+              value={fees.misc}
+              InputProps={{
+                classes: {
+                  input: classes.priceTextField,
+                },
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+              }}
+              onChange={(e) => onFeesChange(e, 'misc')}
+            />
+          ) : (
+            `$${fees.misc}`
+          )}
         </TableCell>
       </TableRow>
       <TableRow key="total">
@@ -293,7 +323,7 @@ function Confirm() {
 
   return (
     <div className={classes.root}>
-      <CssBaseline/>
+      <CssBaseline />
       <Container className={classes.brandHeader} maxWidth="md">
         <h1>SPLITR</h1>
       </Container>
@@ -307,15 +337,13 @@ function Confirm() {
             edge="end"
             onClick={onToggleEdit}
           >
-            {isEditing ? <SaveIcon/> : <EditIcon />}
+            {isEditing ? <SaveIcon /> : <EditIcon />}
           </IconButton>
         </Toolbar>
         <Table>
           <TableHead>
             <TableRow key="header">
-              <TableCell className={classes.tableHeader}>
-                Item
-              </TableCell>
+              <TableCell className={classes.tableHeader}>Item</TableCell>
               <TableCell></TableCell>
               <TableCell className={classes.tableHeader} align="right">
                 Price
@@ -326,13 +354,16 @@ function Confirm() {
         </Table>
 
         <div className={classes.totalFooter}>
-          <Table size="small">
-            {feesContent}
-          </Table>
+          <Table size="small">{feesContent}</Table>
           {!isEditing && (
             <div style={{display: 'flex'}}>
-              <Button className={classes.nextButton}
-                color="primary" variant="contained">Next</Button>
+              <Button
+                className={classes.nextButton}
+                color="primary"
+                variant="contained"
+              >
+                Next
+              </Button>
             </div>
           )}
         </div>
@@ -346,8 +377,9 @@ function Confirm() {
         >
           Add Item +
         </Button>
-      ) : <div/>}
-
+      ) : (
+        <div />
+      )}
     </div>
   );
 }

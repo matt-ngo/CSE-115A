@@ -87,7 +87,6 @@ function Home() {
   };
 
   const [loading, setLoading] = useState(false);
-
   const {setReceiptItems, setFees, setIsEditing} = useContext(SharedContext);
 
   const history = useHistory();
@@ -161,6 +160,7 @@ function Home() {
                       setFees({
                         tax: '0.00',
                         tip: '0.00',
+                        misc: '0.00',
                       });
                       setIsEditing(true);
                       history.push('/confirm');
