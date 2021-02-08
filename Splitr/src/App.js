@@ -17,17 +17,19 @@ const theme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: [
-      'Fira Code',
-      'monospace',
-    ].join(','),
-  }});
+    fontFamily: ['Fira Code', 'monospace'].join(','),
+  },
+});
 
 // Temporary data for testing
 const TEST_RECEIPT_ITEMS = [
   {name: 'Frozen yoghurt', price: '6.50', isSelected: false, isValid: true},
-  {name: 'Ice cream sandwich', price: '4.99', isSelected: false,
-    isValid: true},
+  {
+    name: 'Ice cream sandwich',
+    price: '4.99',
+    isSelected: false,
+    isValid: true,
+  },
   {name: 'Eclair', price: '10.00', isSelected: false, isValid: true},
   {name: 'Cupcake', price: '2.99', isSelected: false, isValid: true},
   {name: 'Gingerbread', price: '1.99', isSelected: false, isValid: true},
@@ -36,8 +38,8 @@ const TEST_RECEIPT_ITEMS = [
 const TEST_FEES = {
   tax: '0.00',
   tip: '0.00',
+  misc: '0.00',
 };
-
 
 /**
  *
@@ -65,7 +67,7 @@ function App() {
           setIsEditing,
         }}
       >
-        <AppRouter/>
+        <AppRouter />
       </SharedContext.Provider>
     </ThemeProvider>
   );
