@@ -56,6 +56,9 @@ const useStyles = makeStyles((theme) => ({
   selectBox: {
     width: '50px',
   },
+  innerbox: {
+    // width: '60px',
+  },
 }));
 
 const calculatePriceEach = (item) => {
@@ -218,9 +221,10 @@ function ReceiptRow(props) {
           <TableCell className={classes.collapsedRow} align="center"/>
           <TableCell className={classes.collapsedRow} align="center">
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <Box marginBottom={2}>
+              <Box marginBottom={2} marginRight={4}
+                className={classes.innerbox}>
                 <Typography variant="caption">
-                  {`> Shared ${item.shared} way${item.shared > 1 ? 's' : ''}`}
+                  {`Shared ${item.shared} way${item.shared > 1 ? 's' : ''}`}
                 </Typography>
                 <IconButton size="small" onClick={()=>removeShareClick(idx)}>
                   <RemoveIcon/>
