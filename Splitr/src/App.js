@@ -2,6 +2,7 @@ import React from 'react';
 import AppRouter from './AppRouter';
 import SharedContext from './SharedContext';
 import {ThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+import {DEFAULT_ITEMS, DEFAULT_FEES} from './DefaultValues';
 
 // custom css: https://material-ui.com/customization/theming/
 const theme = createMuiTheme({
@@ -49,11 +50,13 @@ const TEST_FEES = {
  * @return {object} JSX
  */
 function App() {
-  // Global state of receipt items, initialized to test data
-  const [receiptItems, setReceiptItems] = React.useState(TEST_RECEIPT_ITEMS);
+  // Global state of receipt items
+  // NOTE: using fake data for testing, should be empty array in final!
+  const [receiptItems, setReceiptItems] = React.useState(DEFAULT_ITEMS);
 
-  // Global state of fees (taxes, tips, etc) initialized to test data
-  const [fees, setFees] = React.useState(TEST_FEES);
+  // Global state of fees (taxes, tips, etc)
+  // NOTE: using fake data for testing, should be empty array in final!
+  const [fees, setFees] = React.useState(DEFAULT_FEES);
 
   // Declaration here to allow manual input option -> edit state on
   const [isEditing, setIsEditing] = React.useState(false);

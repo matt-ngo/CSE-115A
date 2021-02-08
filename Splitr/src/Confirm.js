@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
+// import Collapse from '@material-ui/core/Collapse';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -11,16 +12,18 @@ import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import Checkbox from '@material-ui/core/Checkbox';
+// import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+// import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+// import Checkbox from '@material-ui/core/Checkbox';
 import SharedContext from './SharedContext';
+import ReceiptTable from './confirm-components/ReceiptTable';
 import {DEFAULT_ITEM} from './DefaultValues';
 
 
@@ -47,9 +50,6 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     fontWeight: 'bold',
   },
-  deleteCol: {
-    width: theme.spacing(6),
-  },
   addButton: {
     margin: theme.spacing(3, 3),
   },
@@ -72,15 +72,8 @@ const useStyles = makeStyles((theme) => ({
   editIconButton: {
     marginLeft: 'auto',
   },
-  removeButton: {
-    position: 'absolute',
-    marginLeft: theme.spacing(3),
-  },
   nextButton: {
     margin: '1rem auto',
-  },
-  selectBox: {
-    width: '50px',
   },
   totalFooter: {
     paddingTop: '15px',
@@ -141,6 +134,7 @@ function Confirm() {
       }
       total += parseFloat(item.price);
     });
+    console.log(selected);
     const percentage = selected/total;
     // calc and add fraction of tax and tip
     selected += round(percentage * parseFloat(fees.tax).toFixed(2));
@@ -152,22 +146,6 @@ function Confirm() {
     return round(selected);
   };
 
-  const onNameChange = (event, idx) => {
-    const newItems = [...receiptItems];
-    newItems[idx].name = event.target.value;
-    setReceiptItems(newItems);
-  };
-
-  const onPriceChange = (event, idx) => {
-    const isNum = /^\d*\.{0,1}\d{0,2}$/.test(event.target.value);
-    if (!isNum) {
-      return;
-    }
-    const newItems = [...receiptItems];
-    newItems[idx].price = event.target.value;
-    setReceiptItems(newItems);
-  };
-
   const onFeesChange = (event, key) => {
     const newFees = {...fees};
     newFees[key] = event.target.value;
@@ -177,18 +155,6 @@ function Confirm() {
 
   const handleAddItemClick = () => {
     setReceiptItems([...receiptItems, {...DEFAULT_ITEM}]);
-  };
-
-  const handleRemoveItemClick = (idx) => {
-    const newItems = [...receiptItems];
-    newItems.splice(idx, 1);
-    setReceiptItems(newItems);
-  };
-
-  const onSelectItem = (idx) => {
-    const newItems = [...receiptItems];
-    newItems[idx].isSelected = !newItems[idx].isSelected;
-    setReceiptItems(newItems);
   };
 
   const onToggleEdit = () => {
@@ -220,83 +186,6 @@ function Confirm() {
       setIsEditing(true);
     }
   };
-
-  const receiptContent = (
-    <TableBody>
-      {receiptItems.map((item, idx) => (
-        <TableRow
-          key={idx}
-          style={
-            !item.isValid ? {borderStyle: 'dashed', borderColor: 'red'} : {}
-          }
-        >
-          <TableCell className={classes.selectBox}>
-            {
-              <Checkbox
-                color="primary"
-                onClick={() => onSelectItem(idx)}
-              ></Checkbox>
-            }
-          </TableCell>
-          <TableCell>
-            {isEditing ? (
-              <TextField
-                placeholder="eg. Cupcakes"
-                value={item.name}
-                InputProps={{
-                  classes: {
-                    input: classes.itemTextField,
-                  },
-                }}
-                onChange={(e) => onNameChange(e, idx)}
-              />
-            ) : (
-              item.name
-            )}
-          </TableCell>
-          <TableCell align="right">
-            {isEditing ? (
-              <div>
-                <TextField
-                  className={classes.priceField}
-                  placeholder="0.00"
-                  value={item.price}
-                  error={!item.isValid}
-                  id="standard-error"
-                  helperText={item.isValid ? '' : 'Price is required'}
-                  InputProps={{
-                    classes: {
-                      input: classes.priceTextField,
-                    },
-                    startAdornment: (
-                      <InputAdornment position="start">$</InputAdornment>
-                    ),
-                  }}
-                  onChange={(e) => onPriceChange(e, idx)}
-                />
-
-                <IconButton
-                  className={classes.removeButton}
-                  size="small"
-                  onClick={() => handleRemoveItemClick(idx)}
-                >
-                  <HighlightOffIcon style={{fill: '#d01b1b'}}/>
-                </IconButton>
-
-              </div>
-            ) : (
-              `$${item.price}`
-            )}
-
-          </TableCell>
-
-          {/* empty cell for delete icon */}
-          {isEditing ? (<TableCell align="right"></TableCell>) : null}
-
-        </TableRow>
-      ))}
-    </TableBody>
-  );
 
   const feesContent = (
     <TableBody>
@@ -419,20 +308,7 @@ function Confirm() {
             {isEditing ? <SaveIcon /> : <EditIcon />}
           </IconButton>
         </Toolbar>
-        <Table>
-          <TableHead>
-            <TableRow key="header">
-              <TableCell className={classes.tableHeader}>Item</TableCell>
-              <TableCell></TableCell>
-              <TableCell className={classes.tableHeader} align="right">
-                Price
-              </TableCell>
-              {isEditing ?
-                <TableCell className={classes.deleteCol}></TableCell> : null}
-            </TableRow>
-          </TableHead>
-          {receiptContent}
-        </Table>
+        <ReceiptTable/>
 
         {isEditing ? (
         <Button
