@@ -109,7 +109,7 @@ const calculateSplit = (items, fees) => {
   selected += round(percentage * parseFloat(fees.misc).toFixed(2));
 
   if (!total) return 0;
-  return selected;
+  return round(selected);
 };
 
 /**
