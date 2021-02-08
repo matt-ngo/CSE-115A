@@ -63,6 +63,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     textAlign: 'right',
   },
+  priceFeeField: {
+    width: 100,
+  },
+  priceTipField: {
+    width: 106,
+  },
   editIconButton: {
     marginLeft: 'auto',
   },
@@ -299,7 +305,7 @@ function Confirm() {
         <TableCell className={classes.noGridLine} align="right">
           {isEditing ? (
             <TextField
-              className={classes.priceField}
+              className={classes.priceFeeField}
               value={fees.tax}
               InputProps={{
                 classes: {
@@ -321,7 +327,7 @@ function Confirm() {
         <TableCell className={classes.noGridLine} align="right">
           {isEditing ? (
             <TextField
-              className={classes.priceField}
+              className={classes.priceTipField}
               value={fees.tip}
               InputProps={{
                 classes: {
@@ -351,7 +357,7 @@ function Confirm() {
         <TableCell className={classes.noGridLine} align="right">
           {isEditing ? (
             <TextField
-              className={classes.priceField}
+              className={classes.priceFeeField}
               value={fees.misc}
               InputProps={{
                 classes: {
