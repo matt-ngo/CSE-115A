@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
     width: '50px',
   },
   innerbox: {
+    display: 'inline',
     // width: '60px',
   },
 }));
@@ -226,12 +227,14 @@ function ReceiptRow(props) {
                 <Typography variant="caption">
                   {`Shared ${item.shared} way${item.shared > 1 ? 's' : ''}`}
                 </Typography>
-                <IconButton size="small" onClick={()=>removeShareClick(idx)}>
-                  <RemoveIcon/>
-                </IconButton>
-                <IconButton size="small" onClick={()=>addShareClick(idx)}>
-                  <AddIcon/>
-                </IconButton>
+                <div>
+                  <IconButton size="small" onClick={()=>removeShareClick(idx)}>
+                    <RemoveIcon/>
+                  </IconButton>
+                  <IconButton size="small" onClick={()=>addShareClick(idx)}>
+                    <AddIcon/>
+                  </IconButton>
+                </div>
               </Box>
             </Collapse>
           </TableCell>

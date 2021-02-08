@@ -33,5 +33,5 @@ export const DEFAULT_ITEM = {
   price: '',
   isSelected: false,
   isValid: true,
-  shared: 0,
+  shared: 1,
 };
