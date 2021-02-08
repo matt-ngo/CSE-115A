@@ -21,6 +21,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import SharedContext from './SharedContext';
 import {DEFAULT_ITEM} from './DefaultValues';
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'block',
@@ -43,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
   },
   tableHeader: {
     fontWeight: 'bold',
+  },
+  deleteCol: {
+    width: theme.spacing(6),
   },
   addButton: {
     margin: theme.spacing(3, 3),
@@ -253,6 +257,7 @@ function Confirm() {
                   }}
                   onChange={(e) => onPriceChange(e, idx)}
                 />
+
                 <IconButton
                   className={classes.removeButton}
                   size="small"
@@ -260,11 +265,17 @@ function Confirm() {
                 >
                   <HighlightOffIcon style={{fill: '#d01b1b'}}/>
                 </IconButton>
+
               </div>
             ) : (
               `$${item.price}`
             )}
+
           </TableCell>
+
+          {/* empty cell for delete icon */}
+          {isEditing ? (<TableCell align="right"></TableCell>) : null}
+
         </TableRow>
       ))}
     </TableBody>
@@ -391,7 +402,8 @@ function Confirm() {
               <TableCell className={classes.tableHeader} align="right">
                 Price
               </TableCell>
-
+              {isEditing ?
+                <TableCell className={classes.deleteCol}></TableCell> : null}
             </TableRow>
           </TableHead>
           {receiptContent}
