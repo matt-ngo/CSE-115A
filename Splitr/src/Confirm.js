@@ -79,13 +79,37 @@ const useStyles = makeStyles((theme) => ({
 const calculateTotal = (items, fees) => {
   let total = 0;
   items.forEach((item) => {
-    if (item.isSelected) {
-      total += parseFloat(item.price);
-    }
+    // if (item.isSelected) {
+    total += parseFloat(item.price);
+    // }
   });
   total += parseFloat(fees.tax) + parseFloat(fees.tip) + parseFloat(fees.misc);
   if (!total) return 0;
   return total.toFixed(2);
+};
+
+const round = (num) => {
+  // using default JS round to the nearest integer
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+};
+
+const calculateSplit = (items, fees) => {
+  let selected = 0;
+  let total = 0;
+  items.forEach((item) => {
+    if (item.isSelected) {
+      selected += round(parseFloat(item.price) / item.shared);
+    }
+    total += parseFloat(item.price);
+  });
+  const percentage = selected/total;
+  // calc and add fraction of tax and tip
+  selected += round(percentage * parseFloat(fees.tax).toFixed(2));
+  selected += round(percentage * parseFloat(fees.tip).toFixed(2));
+  selected += round(percentage * parseFloat(fees.misc).toFixed(2));
+
+  if (!total) return 0;
+  return round(selected);
 };
 
 /**
@@ -321,6 +345,22 @@ function Confirm() {
     </TableBody>
   );
 
+  const splitContent = (
+    <TableBody>
+      <TableRow>
+        <TableCell className={classes.noGridLine} align="center">
+          <Typography variant="h6">
+        Your Split:
+            <br></br>
+            <div>
+              {`$${calculateSplit(receiptItems, fees)}`}
+            </div>
+          </Typography>
+        </TableCell>
+      </TableRow>
+    </TableBody>
+  );
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -354,7 +394,14 @@ function Confirm() {
         </Table>
 
         <div className={classes.totalFooter}>
-          <Table size="small">{feesContent}</Table>
+          <Table size="small">
+            {feesContent}
+          </Table>
+
+          <Table>
+            {splitContent}
+          </Table>
+
           {!isEditing && (
             <div style={{display: 'flex'}}>
               <Button
@@ -368,6 +415,7 @@ function Confirm() {
           )}
         </div>
       </Paper>
+
       {isEditing ? (
         <Button
           className={classes.addButton}
