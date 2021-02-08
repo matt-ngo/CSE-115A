@@ -5,7 +5,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
+import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -80,6 +82,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const calculateTip = (subtotal, tipValue, tipType) => {
+  if (tipType == '%') {
+    return tipValue / 100.0 * subtotal;
+  } else {
+    return tipValue;
+  }
+};
+
 const calculateTotal = (items, fees) => {
   let total = 0;
   items.forEach((item) => {
@@ -87,7 +97,8 @@ const calculateTotal = (items, fees) => {
     total += parseFloat(item.price);
     // }
   });
-  total += parseFloat(fees.tax) + parseFloat(fees.tip) + parseFloat(fees.misc);
+  total += calculateTip(total, parseFloat(fees.tip), fees.tipType);
+  total += parseFloat(fees.tax) + parseFloat(fees.misc);
   if (!total) return 0;
   return total.toFixed(2);
 };
@@ -317,13 +328,21 @@ function Confirm() {
                   input: classes.priceTextField,
                 },
                 startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
+                  <InputAdornment position="start">
+                    <Select
+                      value={fees.tipType}
+                      onChange={(e) => onFeesChange(e, 'tipType')}
+                    >
+                      <MenuItem value="$">$</MenuItem>
+                      <MenuItem value="%">%</MenuItem>
+                    </Select>
+                  </InputAdornment>
                 ),
               }}
               onChange={(e) => onFeesChange(e, 'tip')}
             />
           ) : (
-            `$${fees.tip}`
+            (fees.tipType == '%') ? (`${fees.tip}%`) : (`$${fees.tip}`)
           )}
         </TableCell>
       </TableRow>
