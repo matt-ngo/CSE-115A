@@ -57,6 +57,9 @@ function App() {
   // Declaration here to allow manual input option -> edit state on
   const [isEditing, setIsEditing] = React.useState(false);
 
+  // To allow global access of calculation result
+  const [splitAmount, setSplitAmount] = React.useState(0);
+
   return (
     <ThemeProvider theme={theme}>
       <SharedContext.Provider
@@ -67,6 +70,8 @@ function App() {
           setReceiptItems,
           isEditing,
           setIsEditing,
+          splitAmount,
+          setSplitAmount,
         }}
       >
         <AppRouter />

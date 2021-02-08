@@ -93,25 +93,6 @@ const round = (num) => {
   return Math.round((num + Number.EPSILON) * 100) / 100;
 };
 
-const calculateSplit = (items, fees) => {
-  let selected = 0;
-  let total = 0;
-  items.forEach((item) => {
-    if (item.isSelected) {
-      selected += round(parseFloat(item.price) / item.shared);
-    }
-    total += parseFloat(item.price);
-  });
-  const percentage = selected/total;
-  // calc and add fraction of tax and tip
-  selected += round(percentage * parseFloat(fees.tax).toFixed(2));
-  selected += round(percentage * parseFloat(fees.tip).toFixed(2));
-  selected += round(percentage * parseFloat(fees.misc).toFixed(2));
-
-  if (!total) return 0;
-  return round(selected);
-};
-
 /**
  * Confirm Page Component
  *
@@ -127,7 +108,28 @@ function Confirm() {
     setReceiptItems,
     isEditing,
     setIsEditing,
+    setSplitAmount,
   } = useContext(SharedContext);
+
+  const calculateSplit = (items, fees) => {
+    let selected = 0;
+    let total = 0;
+    items.forEach((item) => {
+      if (item.isSelected) {
+        selected += round(parseFloat(item.price) / item.shared);
+      }
+      total += parseFloat(item.price);
+    });
+    const percentage = selected/total;
+    // calc and add fraction of tax and tip
+    selected += round(percentage * parseFloat(fees.tax).toFixed(2));
+    selected += round(percentage * parseFloat(fees.tip).toFixed(2));
+    selected += round(percentage * parseFloat(fees.misc).toFixed(2));
+
+    setSplitAmount(round(selected));
+
+    return round(selected);
+  };
 
   const onNameChange = (event, idx) => {
     const newItems = [...receiptItems];
@@ -350,8 +352,9 @@ function Confirm() {
       <TableRow>
         <TableCell className={classes.noGridLine} align="center">
           <Typography variant="h6">
-        Your Split:
-            <br></br>
+            Your Split:
+          </Typography>
+          <Typography variant="h5">
             <div>
               {`$${calculateSplit(receiptItems, fees)}`}
             </div>
