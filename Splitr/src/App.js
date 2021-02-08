@@ -17,7 +17,8 @@ const theme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: ['Fira Code', 'monospace'].join(','),
+    fontFamily: ['Fira Code Medium', 'monospace'].join(','),
+    fontSize: 14,
   },
 });
 

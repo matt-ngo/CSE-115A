@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
   },
   addButton: {
-    margin: theme.spacing(2, 0),
+    margin: theme.spacing(3, 3),
   },
   priceField: {
     width: 80,
@@ -256,7 +256,7 @@ function Confirm() {
                   size="small"
                   onClick={() => handleRemoveItemClick(idx)}
                 >
-                  <HighlightOffIcon />
+                  <HighlightOffIcon style={{fill: '#d01b1b'}}/>
                 </IconButton>
               </div>
             ) : (
@@ -388,10 +388,22 @@ function Confirm() {
               <TableCell className={classes.tableHeader} align="right">
                 Price
               </TableCell>
+
             </TableRow>
           </TableHead>
           {receiptContent}
         </Table>
+
+        {isEditing ? (
+        <Button
+          className={classes.addButton}
+          variant="contained"
+          color="primary"
+          onClick={handleAddItemClick}
+        >
+          Add Item +
+        </Button>
+      ) : (<div/>)}
 
         <div className={classes.totalFooter}>
           <Table size="small">
@@ -416,18 +428,6 @@ function Confirm() {
         </div>
       </Paper>
 
-      {isEditing ? (
-        <Button
-          className={classes.addButton}
-          variant="contained"
-          color="primary"
-          onClick={handleAddItemClick}
-        >
-          Add Item +
-        </Button>
-      ) : (
-        <div />
-      )}
     </div>
   );
 }
