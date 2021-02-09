@@ -83,6 +83,13 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '15px',
     paddingBottom: '20px',
   },
+  dotted: {
+    margin: 'auto',
+    marginTop: '5%',
+    marginBottom: '5%',
+    width: '90%',
+    borderTop: '#1c1b1b 2px dashed',
+  },
 }));
 
 const calculateTip = (subtotal, tipValue, tipType) => {
@@ -192,7 +199,6 @@ function Confirm() {
       if (canSave) {
         setIsEditing(false);
       }
-      // console.log(fees); //
     } else {
       setIsEditing(true);
     }
@@ -294,7 +300,7 @@ function Confirm() {
       <TableRow>
         <TableCell className={classes.noGridLine} align="center">
           <Typography variant="h6">Your Split:</Typography>
-          <Typography variant="h5">
+          <Typography variant="h6">
             <div>{`$${calculateSplit(receiptItems, fees)}`}</div>
           </Typography>
         </TableCell>
@@ -335,6 +341,8 @@ function Confirm() {
         ) : (
           <div />
         )}
+
+        <div className={classes.dotted}></div>
 
         <div className={classes.totalFooter}>
           <Table size="small">{feesContent}</Table>

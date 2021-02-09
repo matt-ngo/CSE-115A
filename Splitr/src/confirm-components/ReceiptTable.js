@@ -12,8 +12,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
+import RemoveCircleRoundedIcon from '@material-ui/icons/RemoveCircleRounded';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -23,12 +23,14 @@ import SharedContext from '../SharedContext';
 const useStyles = makeStyles((theme) => ({
   recTable: {
     minWidth: '750',
-    // width: '100%',
   },
   row: {
     '& > *': {
       borderBottom: 'unset',
     },
+  },
+  noGridLine: {
+    borderBottom: 'none',
   },
   tableHeader: {
     fontWeight: 'bold',
@@ -67,7 +69,6 @@ const useStyles = makeStyles((theme) => ({
     width: '50px',
     [theme.breakpoints.down('xs')]: {
       padding: 5,
-      // backgroundColor: 'green',
     },
   },
   innerbox: {
@@ -79,12 +80,18 @@ const useStyles = makeStyles((theme) => ({
     // display: 'flex',
     // alignItems: 'center',
   },
+  button: {
+    // marginLeft: '20%',
+    // marginRight: '2%',
+  },
   cell: {
+    borderBottom: 'none !important',
     [theme.breakpoints.down('xs')]: {
       padding: 5,
     },
   },
 }));
+
 
 const calculatePriceEach = (item) => {
   return round(parseFloat(item.price) / item.shared).toFixed(2);
@@ -237,19 +244,24 @@ function ReceiptRow(props) {
           <TableCell className={classes.collapsedRow} align="center" />
           <TableCell className={classes.collapsedRow} align="center">
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <Box className={classes.innerbox}>
+              <Box>
                 <Typography variant="body2">
-                  {`| Shared ${item.shared} way${item.shared > 1 ? 's' : ''}`}
+                  {`-> Shared ${item.shared} way${item.shared > 1 ? 's' : ''}`}
                 </Typography>
                 <div className={classes.shareButtons}>
                   <IconButton
                     size="small"
+                    className={classes.button}
                     onClick={() => removeShareClick(idx)}
                   >
-                    <RemoveIcon />
+                    <RemoveCircleRoundedIcon />
                   </IconButton>
-                  <IconButton size="small" onClick={() => addShareClick(idx)}>
-                    <AddIcon />
+                  <IconButton
+                    size="small"
+                    className={classes.button}
+                    onClick={() => addShareClick(idx)}
+                  >
+                    <AddCircleRoundedIcon />
                   </IconButton>
                 </div>
               </Box>
