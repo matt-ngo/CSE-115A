@@ -26,7 +26,6 @@ import SharedContext from './SharedContext';
 import ReceiptTable from './confirm-components/ReceiptTable';
 import {DEFAULT_ITEM} from './DefaultValues';
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'block',
@@ -35,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
     padding: '20px',
   },
   brandHeader: {
-    textAlign: 'center',
+    textAlign: 'left',
+    color: '#074EE8',
   },
   paper: {
     width: 'auto',
@@ -62,6 +62,9 @@ const useStyles = makeStyles((theme) => ({
   priceTextField: {
     fontSize: 14,
     textAlign: 'right',
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 12,
+    },
   },
   priceFeeField: {
     width: 100,
@@ -71,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
   },
   editIconButton: {
     marginLeft: 'auto',
+    color: '#074EE8',
   },
   nextButton: {
     margin: '1rem auto',
@@ -83,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
 
 const calculateTip = (subtotal, tipValue, tipType) => {
   if (tipType == '%') {
-    return tipValue / 100.0 * subtotal;
+    return (tipValue / 100.0) * subtotal;
   } else {
     return tipValue;
   }
@@ -134,8 +138,8 @@ function Confirm() {
       }
       total += parseFloat(item.price);
     });
-    console.log(selected);
-    const percentage = selected/total;
+
+    const percentage = selected / total;
     // calc and add fraction of tax and tip
     selected += round(percentage * parseFloat(fees.tax).toFixed(2));
     selected += round(percentage * parseFloat(fees.tip).toFixed(2));
@@ -143,12 +147,18 @@ function Confirm() {
 
     setSplitAmount(round(selected));
 
-    return round(selected);
+    return round(selected).toFixed(2);
   };
 
   const onFeesChange = (event, key) => {
     const newFees = {...fees};
-    newFees[key] = event.target.value;
+    if (event.target.value == '') {
+      console.log('empty');
+      newFees[key] = 0.0;
+    } else {
+      newFees[key] = event.target.value;
+    }
+
     newFees.total = calculateTotal(receiptItems, newFees);
     setFees(newFees);
   };
@@ -182,6 +192,7 @@ function Confirm() {
       if (canSave) {
         setIsEditing(false);
       }
+      // console.log(fees); //
     } else {
       setIsEditing(true);
     }
@@ -190,7 +201,9 @@ function Confirm() {
   const feesContent = (
     <TableBody>
       <TableRow key="tax">
-        <TableCell className={classes.noGridLine}>Tax</TableCell>
+        <TableCell className={classes.noGridLine}>
+          <Typography variant="body1">Tax</Typography>
+        </TableCell>
         <TableCell className={classes.noGridLine} align="right">
           {isEditing ? (
             <TextField
@@ -207,12 +220,14 @@ function Confirm() {
               onChange={(e) => onFeesChange(e, 'tax')}
             />
           ) : (
-            `$${fees.tax}`
+            <Typography variant="body1">${fees.tax}</Typography>
           )}
         </TableCell>
       </TableRow>
       <TableRow key="tip">
-        <TableCell className={classes.noGridLine}>Tip</TableCell>
+        <TableCell className={classes.noGridLine}>
+          <Typography variant="body1">Tip</Typography>
+        </TableCell>
         <TableCell className={classes.noGridLine} align="right">
           {isEditing ? (
             <TextField
@@ -236,8 +251,10 @@ function Confirm() {
               }}
               onChange={(e) => onFeesChange(e, 'tip')}
             />
+          ) : fees.tipType == '%' ? (
+            <Typography variant="body1">${fees.tip}%</Typography>
           ) : (
-            (fees.tipType == '%') ? (`${fees.tip}%`) : (`$${fees.tip}`)
+            <Typography variant="body1">${fees.tip}</Typography>
           )}
         </TableCell>
       </TableRow>
@@ -259,7 +276,7 @@ function Confirm() {
               onChange={(e) => onFeesChange(e, 'misc')}
             />
           ) : (
-            `$${fees.misc}`
+            <Typography variant="body1">${fees.misc}</Typography>
           )}
         </TableCell>
       </TableRow>
@@ -276,13 +293,9 @@ function Confirm() {
     <TableBody>
       <TableRow>
         <TableCell className={classes.noGridLine} align="center">
-          <Typography variant="h6">
-            Your Split:
-          </Typography>
+          <Typography variant="h6">Your Split:</Typography>
           <Typography variant="h5">
-            <div>
-              {`$${calculateSplit(receiptItems, fees)}`}
-            </div>
+            <div>{`$${calculateSplit(receiptItems, fees)}`}</div>
           </Typography>
         </TableCell>
       </TableRow>
@@ -308,27 +321,25 @@ function Confirm() {
             {isEditing ? <SaveIcon /> : <EditIcon />}
           </IconButton>
         </Toolbar>
-        <ReceiptTable/>
+        <ReceiptTable />
 
         {isEditing ? (
-        <Button
-          className={classes.addButton}
-          variant="contained"
-          color="primary"
-          onClick={handleAddItemClick}
-        >
-          Add Item +
-        </Button>
-      ) : (<div/>)}
+          <Button
+            className={classes.addButton}
+            variant="contained"
+            color="primary"
+            onClick={handleAddItemClick}
+          >
+            Add Item +
+          </Button>
+        ) : (
+          <div />
+        )}
 
         <div className={classes.totalFooter}>
-          <Table size="small">
-            {feesContent}
-          </Table>
+          <Table size="small">{feesContent}</Table>
 
-          <Table>
-            {splitContent}
-          </Table>
+          {isEditing ? null : <Table>{splitContent}</Table>}
 
           {!isEditing && (
             <div style={{display: 'flex'}}>
@@ -343,7 +354,6 @@ function Confirm() {
           )}
         </div>
       </Paper>
-
     </div>
   );
 }

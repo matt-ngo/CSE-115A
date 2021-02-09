@@ -23,6 +23,7 @@ import SharedContext from '../SharedContext';
 const useStyles = makeStyles((theme) => ({
   recTable: {
     minWidth: '750',
+    // width: '100%',
   },
   row: {
     '& > *': {
@@ -31,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
   },
   tableHeader: {
     fontWeight: 'bold',
+    [theme.breakpoints.down('xs')]: {
+      padding: 5,
+    },
   },
   collapsedRow: {
     paddingBottom: 0,
@@ -44,10 +48,16 @@ const useStyles = makeStyles((theme) => ({
   },
   itemTextField: {
     fontSize: 14,
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 12,
+    },
   },
   priceTextField: {
     fontSize: 14,
     textAlign: 'right',
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 12,
+    },
   },
   removeButton: {
     position: 'absolute',
@@ -55,15 +65,29 @@ const useStyles = makeStyles((theme) => ({
   },
   selectBox: {
     width: '50px',
+    [theme.breakpoints.down('xs')]: {
+      padding: 5,
+      // backgroundColor: 'green',
+    },
   },
   innerbox: {
     display: 'inline',
-    // width: '60px',
+  },
+  shareButtons: {
+    marginTop: 5,
+    marginBottom: 10,
+    // display: 'flex',
+    // alignItems: 'center',
+  },
+  cell: {
+    [theme.breakpoints.down('xs')]: {
+      padding: 5,
+    },
   },
 }));
 
 const calculatePriceEach = (item) => {
-  return round(parseFloat(item.price) / item.shared);
+  return round(parseFloat(item.price) / item.shared).toFixed(2);
 };
 
 const round = (num) => {
@@ -81,11 +105,9 @@ function ReceiptRow(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
-  const {
-    receiptItems,
-    setReceiptItems,
-    isEditing,
-  } = useContext(SharedContext);
+  const {receiptItems, setReceiptItems, isEditing} = useContext(
+      SharedContext,
+  );
 
   const onNameChange = (event, idx) => {
     const newItems = [...receiptItems];
@@ -132,19 +154,16 @@ function ReceiptRow(props) {
   if (isEditing) {
     return (
       <TableRow
-        style={!item.isValid ?
-          {borderStyle: 'dashed',
-            borderColor: 'red'}:
-            {}
+        style={
+          !item.isValid ? {borderStyle: 'dashed', borderColor: 'red'} : {}
         }
       >
+        {/* Checkbox */}
         <TableCell className={classes.selectBox}>
-          <Checkbox
-            color="primary"
-            onClick={()=>onSelectItem(idx)}
-          />
+          <Checkbox color="primary" onClick={() => onSelectItem(idx)} />
         </TableCell>
-        <TableCell>
+        {/* Input box */}
+        <TableCell className={classes.cell}>
           <TextField
             placeholder="eg. Cupcakes"
             value={item.name}
@@ -156,12 +175,13 @@ function ReceiptRow(props) {
             onChange={(e) => onNameChange(e, idx)}
           />
         </TableCell>
-        <TableCell align="right">
+        {/* Price Input */}
+        <TableCell align="right" className={classes.cell}>
           <TextField
             className={classes.priceField}
             placeholder="0.00"
             value={item.price}
-            error = {!item.isValid}
+            error={!item.isValid}
             id="standard-error"
             helperText={item.isValid ? '' : 'Price is required'}
             InputProps={{
@@ -175,12 +195,10 @@ function ReceiptRow(props) {
             onChange={(e) => onPriceChange(e, idx)}
           />
         </TableCell>
-        <TableCell>
-          <IconButton
-            size="small"
-            onClick={() => handleRemoveItemClick(idx)}
-          >
-            <HighlightOffIcon/>
+        {/* Delete Icon */}
+        <TableCell className={classes.cell}>
+          <IconButton size="small" onClick={() => handleRemoveItemClick(idx)}>
+            <HighlightOffIcon style={{color: '#e36862'}} />
           </IconButton>
         </TableCell>
       </TableRow>
@@ -189,62 +207,63 @@ function ReceiptRow(props) {
     return (
       <React.Fragment>
         <TableRow
-          style={!item.isValid ?
-            {borderStyle: 'dashed',
-              borderColor: 'red',
-            }:
+          style={
+            !item.isValid ?
+              {borderStyle: 'dashed', borderColor: 'red'} :
               {borderBottom: 'unset'}
           }
           className={classes.row}
         >
+          {/* Checkbox */}
           <TableCell className={classes.selectBox}>
-            <Checkbox
-              color="primary"
-              onClick={()=>onSelectItem(idx)}
-            />
+            <Checkbox color="primary" onClick={() => onSelectItem(idx)} />
           </TableCell>
-          <TableCell>
-            {item.name}
+          {/* Item Name */}
+          <TableCell className={classes.cell}>
+            <Typography variant="body1">{item.name}</Typography>
           </TableCell>
-          <TableCell align="right">
-            {item.price}
+          {/* Item Price */}
+          <TableCell align="right" className={classes.cell}>
+            <Typography variant="body1">${item.price}</Typography>
           </TableCell>
-          <TableCell align="right">
-            <IconButton
-              size="small"
-              onClick={()=>setExpanded(!expanded)}
-            >
-              {expanded ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+          {/* Dropdown Arrow */}
+          <TableCell align="right" className={classes.cell}>
+            <IconButton size="small" onClick={() => setExpanded(!expanded)}>
+              {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className={classes.collapsedRow} align="center"/>
+          <TableCell className={classes.collapsedRow} align="center" />
           <TableCell className={classes.collapsedRow} align="center">
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <Box marginBottom={2} marginRight={4}
-                className={classes.innerbox}>
-                <Typography variant="caption">
-                  {`Shared ${item.shared} way${item.shared > 1 ? 's' : ''}`}
+              <Box className={classes.innerbox}>
+                <Typography variant="body2">
+                  {`| Shared ${item.shared} way${item.shared > 1 ? 's' : ''}`}
                 </Typography>
-                <div>
-                  <IconButton size="small" onClick={()=>removeShareClick(idx)}>
-                    <RemoveIcon/>
+                <div className={classes.shareButtons}>
+                  <IconButton
+                    size="small"
+                    onClick={() => removeShareClick(idx)}
+                  >
+                    <RemoveIcon />
                   </IconButton>
-                  <IconButton size="small" onClick={()=>addShareClick(idx)}>
-                    <AddIcon/>
+                  <IconButton size="small" onClick={() => addShareClick(idx)}>
+                    <AddIcon />
                   </IconButton>
                 </div>
               </Box>
             </Collapse>
           </TableCell>
-          <TableCell className={classes.collapsedRow} align="center"
+          <TableCell
+            className={classes.collapsedRow}
+            align="center"
             colSpan={2}
           >
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <Box marginBottom={2}>
-                <Typography variant="caption">
-                  {`${calculatePriceEach(item)} ea.`}
+                <Typography variant="body2">
+                  {`$${calculatePriceEach(item)} ea.`}
                 </Typography>
               </Box>
             </Collapse>
@@ -285,19 +304,17 @@ function ReceiptTable() {
     <Table className={classes.recTable} size="small">
       <TableHead>
         <TableRow key="header">
-          <TableCell className={classes.selectBox}/>
-          <TableCell className={classes.tableHeader}>
-            Item
-          </TableCell>
+          <TableCell className={classes.selectBox} />
+          <TableCell className={classes.tableHeader}>Item</TableCell>
           <TableCell className={classes.tableHeader} align="right">
             Price
           </TableCell>
-          <TableCell align="right"/>
+          <TableCell align="right" />
         </TableRow>
       </TableHead>
       <TableBody>
         {receiptItems.map((item, idx) => (
-          <ReceiptRow key={idx} item={item} idx={idx}/>
+          <ReceiptRow key={idx} item={item} idx={idx} />
         ))}
       </TableBody>
     </Table>

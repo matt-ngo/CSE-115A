@@ -25,7 +25,8 @@ const useStyles = makeStyles((theme) => ({
     margin: 'auto',
   },
   brandHeader: {
-    textAlign: 'center',
+    textAlign: 'left',
+    color: '#074EE8',
   },
   alert: {
     'width': '100%',
