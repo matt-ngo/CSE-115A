@@ -161,6 +161,7 @@ function Home() {
                       setFees({
                         tax: '0.00',
                         tip: '0.00',
+                        tipType: '$',
                         misc: '0.00',
                       });
                       setIsEditing(true);
