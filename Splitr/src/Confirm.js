@@ -25,6 +25,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import SharedContext from './SharedContext';
 import ReceiptTable from './confirm-components/ReceiptTable';
 import {DEFAULT_ITEM} from './DefaultValues';
+import {number} from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -134,6 +135,7 @@ function Confirm() {
     isEditing,
     setIsEditing,
     setSplitAmount,
+    // splitAmount,
   } = useContext(SharedContext);
 
   const calculateSplit = (items, fees) => {
@@ -153,8 +155,13 @@ function Confirm() {
     selected += round(percentage * parseFloat(fees.misc).toFixed(2));
 
     setSplitAmount(round(selected));
+    let splitAmt = round(selected).toFixed(2);
 
-    return round(selected).toFixed(2);
+    if (typeof splitAmt != number) {
+      splitAmt = (0).toFixed(2);
+    }
+
+    return splitAmt;
   };
 
   const onFeesChange = (event, key) => {
