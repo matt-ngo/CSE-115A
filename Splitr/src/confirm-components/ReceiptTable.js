@@ -246,7 +246,7 @@ function ReceiptRow(props) {
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <Box>
                 <Typography variant="body2">
-                  {`-> Shared ${item.shared} way${item.shared > 1 ? 's' : ''}`}
+                  {`→ Shared ${item.shared} way${item.shared > 1 ? 's' : ''}`}
                 </Typography>
                 <div className={classes.shareButtons}>
                   <IconButton
