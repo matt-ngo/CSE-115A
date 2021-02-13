@@ -25,6 +25,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import SharedContext from './SharedContext';
 import ReceiptTable from './confirm-components/ReceiptTable';
 import {DEFAULT_ITEM} from './DefaultValues';
+import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -361,6 +362,8 @@ function Confirm() {
                 className={classes.nextButton}
                 color="primary"
                 variant="contained"
+                component={Link}
+                to="/pay"
               >
                 Next
               </Button>
