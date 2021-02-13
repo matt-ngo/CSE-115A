@@ -94,6 +94,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export const isValidPrice = (stringToTest) => {
+  return /^\d*\.{0,1}\d{0,2}$/.test(stringToTest);
+};
+
 const calculateTip = (subtotal, tipValue, tipType) => {
   if (tipType == '%') {
     return (tipValue / 100.0) * subtotal;
@@ -105,13 +109,18 @@ const calculateTip = (subtotal, tipValue, tipType) => {
 const calculateTotal = (items, fees) => {
   let total = 0;
   items.forEach((item) => {
-    // if (item.isSelected) {
-    total += parseFloat(item.price);
-    // }
+    const price = item.price ? item.price : 0;
+    total += parseFloat(price);
   });
-  total += calculateTip(total, parseFloat(fees.tip), fees.tipType);
-  total += parseFloat(fees.tax) + parseFloat(fees.misc);
-  if (!total) return 0;
+  const tip = fees.tip ? fees.tip : '0.00';
+  const tax = fees.tax ? fees.tax : '0.00';
+  const misc = fees.misc ? fees.misc : '0.00';
+
+  total += calculateTip(total, parseFloat(tip), fees.tipType);
+  total += parseFloat(tax) + parseFloat(misc);
+  if (!total || isNaN(total)) {
+    return '';
+  }
   return total.toFixed(2);
 };
 
@@ -165,11 +174,14 @@ function Confirm() {
   };
 
   useEffect(() => {
+    setFees({...fees, total: calculateTotal(receiptItems, fees)});
+
     setLocalSplitAmount((prev) => {
       const newSplitAmount = calculateSplit(receiptItems, fees);
       if (newSplitAmount !== localSplitAmount) {
-        setLocalSplitAmount(newSplitAmount);
+        return newSplitAmount;
       }
+      return prev;
     });
   }, [receiptItems]);
 
@@ -181,12 +193,10 @@ function Confirm() {
 
   const onFeesChange = (event, key) => {
     const newFees = {...fees};
-    if (event.target.value == '') {
-      console.log('empty');
-      newFees[key] = 0.0;
-    } else {
-      newFees[key] = event.target.value;
+    if (!isValidPrice(event.target.value)) {
+      return;
     }
+    newFees[key] = event.target.value;
 
     newFees.total = calculateTotal(receiptItems, newFees);
     setFees(newFees);
@@ -194,6 +204,15 @@ function Confirm() {
 
   const handleAddItemClick = () => {
     setReceiptItems([...receiptItems, {...DEFAULT_ITEM}]);
+  };
+
+  const formatPrice = (price) => {
+    let newPrice = price === '.' ? '' : price;
+    if (newPrice) {
+      newPrice = parseFloat(price);
+      newPrice = newPrice.toFixed(2);
+    }
+    return newPrice;
   };
 
   const onToggleEdit = () => {
@@ -204,12 +223,8 @@ function Confirm() {
           .map((item) => {
             let isValid = true;
 
-            // Format prices upon save
-            let newPrice = item.price === '.' ? '' : item.price;
-            if (newPrice) {
-              newPrice = parseFloat(item.price);
-              newPrice = newPrice.toFixed(2);
-            }
+            // Format receipt prices upon save
+            const newPrice = formatPrice(item.price);
 
             if (newPrice == '') {
               canSave = false;
@@ -218,6 +233,18 @@ function Confirm() {
             return {...item, isValid, price: newPrice};
           });
       setReceiptItems(newItems);
+
+      // Format values of tax, tip, misc fees
+      setFees(() => {
+        let newTax = formatPrice(fees.tax);
+        let newTip = formatPrice(fees.tip);
+        let newMisc = formatPrice(fees.misc);
+        newTax = newTax ? newTax : '0.00';
+        newTip = newTip ? newTip : '0.00';
+        newMisc = newMisc ? newMisc : '0.00';
+        return {...fees, tax: newTax, tip: newTip, misc: newMisc};
+      });
+
       if (canSave) {
         setIsEditing(false);
       }
@@ -311,7 +338,7 @@ function Confirm() {
       <TableRow key="total">
         <TableCell className={classes.noGridLine}>Total</TableCell>
         <TableCell className={classes.noGridLine} align="right">
-          {`$${calculateTotal(receiptItems, fees)}`}
+          {`$${fees.total}`}
         </TableCell>
       </TableRow>
     </TableBody>
