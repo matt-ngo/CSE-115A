@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: 'auto',
     boxShadow: '7px 8px 15px grey',
+    marginBottom: '1rem',
   },
   itemsTable: {
     marginBottom: theme.spacing(2),
@@ -140,6 +141,8 @@ function Confirm() {
   } = useContext(SharedContext);
 
   const calculateSplit = (items, fees) => {
+    console.log(items);
+    console.log(fees);
     let selected = 0;
     let total = 0;
     items.forEach((item) => {

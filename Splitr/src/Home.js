@@ -17,6 +17,7 @@ import SharedContext from './SharedContext';
 import ImageUploading from 'react-images-uploading';
 
 import axios from 'axios';
+import {DEFAULT_FEES, DEFAULT_ITEM} from './DefaultValues';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: 'auto',
     minHeight: '200px',
+    marginBottom: '1rem',
   },
   buttonContainer: {
     display: 'block',
@@ -158,12 +160,7 @@ function Home() {
                     startIcon={<BorderColorOutlinedIcon />}
                     onClick={() => {
                       setReceiptItems([]);
-                      setFees({
-                        tax: '0.00',
-                        tip: '0.00',
-                        tipType: '$',
-                        misc: '0.00',
-                      });
+                      setFees(DEFAULT_FEES);
                       setIsEditing(true);
                       history.push('/confirm');
                     }}
@@ -213,26 +210,16 @@ function Home() {
                                 const receiptItems = [];
                                 response.data.ReceiptItems.forEach((item) => {
                                   receiptItems.push({
+                                    ...DEFAULT_ITEM,
                                     name: item.ItemDescription,
                                     price:
                                     item.ItemPrice !== null ?
                                       item.ItemPrice.toString() :
                                       '0',
-                                    isSelected: false,
-                                    isValid: true,
-                                    shared: 1,
                                   });
                                 });
                                 setReceiptItems(receiptItems);
-                                setFees({
-                                  tax: (
-                                    response.data.ReceiptTotal -
-                                  response.data.ReceiptSubTotal
-                                  )
-                                      .toFixed(2)
-                                      .toString(),
-                                  tip: '0.00',
-                                });
+                                setFees(DEFAULT_FEES);
                                 history.push('/confirm');
                               })
                               .catch((error) => {
