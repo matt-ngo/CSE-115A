@@ -215,6 +215,9 @@ function Home() {
                                   receiptItems.push({
                                     name: item.ItemDescription,
                                     price: item.ItemPrice,
+                                    isSelected: false,
+                                    isValid: true,
+                                    shared: 1,
                                   });
                                 });
                                 setReceiptItems(receiptItems);
