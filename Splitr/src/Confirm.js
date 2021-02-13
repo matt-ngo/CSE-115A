@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -126,6 +126,7 @@ const round = (num) => {
  */
 function Confirm() {
   const classes = useStyles();
+  const [localSplitAmount, setLocalSplitAmount] = useState(0);
 
   const {
     fees,
@@ -135,7 +136,7 @@ function Confirm() {
     isEditing,
     setIsEditing,
     setSplitAmount,
-    // splitAmount,
+    splitAmount,
   } = useContext(SharedContext);
 
   const calculateSplit = (items, fees) => {
@@ -154,15 +155,25 @@ function Confirm() {
     selected += round(percentage * parseFloat(fees.tip).toFixed(2));
     selected += round(percentage * parseFloat(fees.misc).toFixed(2));
 
-    setSplitAmount(round(selected));
-    const splitAmt = round(selected).toFixed(2);
+    setLocalSplitAmount(round(selected));
 
-    // if (typeof splitAmt != number) {
-    //   splitAmt = (0).toFixed(2);
-    // }
-
-    return splitAmt;
+    return round(selected);
   };
+
+  useEffect(() => {
+    setLocalSplitAmount((prev) => {
+      const newSplitAmount = calculateSplit(receiptItems, fees);
+      if (newSplitAmount !== localSplitAmount) {
+        setLocalSplitAmount(newSplitAmount);
+      }
+    });
+  }, [receiptItems]);
+
+  useEffect(() => {
+    if (splitAmount !== localSplitAmount) {
+      setSplitAmount(localSplitAmount);
+    }
+  }, [localSplitAmount]);
 
   const onFeesChange = (event, key) => {
     const newFees = {...fees};
@@ -308,7 +319,7 @@ function Confirm() {
         <TableCell className={classes.noGridLine} align="center">
           <Typography variant="h6">Your Split:</Typography>
           <Typography variant="h6">
-            <div>{`$${calculateSplit(receiptItems, fees)}`}</div>
+            <div>{`$${splitAmount.toFixed(2)}`}</div>
           </Typography>
         </TableCell>
       </TableRow>

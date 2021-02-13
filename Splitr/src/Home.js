@@ -214,7 +214,10 @@ function Home() {
                                 response.data.ReceiptItems.forEach((item) => {
                                   receiptItems.push({
                                     name: item.ItemDescription,
-                                    price: item.ItemPrice,
+                                    price:
+                                    item.ItemPrice !== null ?
+                                      item.ItemPrice.toString() :
+                                      '0',
                                     isSelected: false,
                                     isValid: true,
                                     shared: 1,
