@@ -155,7 +155,10 @@ function Confirm() {
     const percentage = selected / total;
     // calc and add fraction of tax and tip
     selected += round(percentage * parseFloat(fees.tax).toFixed(2));
-    selected += round(percentage * parseFloat(fees.tip).toFixed(2));
+    selected += round(
+        percentage *
+        calculateTip(total, parseFloat(fees.tip), fees.tipType).toFixed(2),
+    );
     selected += round(percentage * parseFloat(fees.misc).toFixed(2));
 
     setLocalSplitAmount(round(selected));
@@ -279,7 +282,7 @@ function Confirm() {
               onChange={(e) => onFeesChange(e, 'tip')}
             />
           ) : fees.tipType == '%' ? (
-            <Typography variant="body1">${fees.tip}%</Typography>
+            <Typography variant="body1">{fees.tip}%</Typography>
           ) : (
             <Typography variant="body1">${fees.tip}</Typography>
           )}
