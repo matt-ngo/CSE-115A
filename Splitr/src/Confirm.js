@@ -141,8 +141,6 @@ function Confirm() {
   } = useContext(SharedContext);
 
   const calculateSplit = (items, fees) => {
-    console.log(items);
-    console.log(fees);
     let selected = 0;
     let total = 0;
     items.forEach((item) => {
@@ -152,7 +150,7 @@ function Confirm() {
       total += parseFloat(item.price);
     });
 
-    const percentage = selected / total;
+    const percentage = total === 0 ? 0 : selected / total;
     // calc and add fraction of tax and tip
     selected += round(percentage * parseFloat(fees.tax).toFixed(2));
     selected += round(

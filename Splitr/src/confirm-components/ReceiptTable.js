@@ -92,7 +92,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const calculatePriceEach = (item) => {
   return round(parseFloat(item.price) / item.shared).toFixed(2);
 };
@@ -189,7 +188,6 @@ function ReceiptRow(props) {
             placeholder="0.00"
             value={item.price}
             error={!item.isValid}
-            id="standard-error"
             helperText={item.isValid ? '' : 'Price is required'}
             InputProps={{
               classes: {
