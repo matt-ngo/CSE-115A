@@ -19,6 +19,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Checkbox from '@material-ui/core/Checkbox';
 import SharedContext from '../SharedContext';
+import {isValidPrice} from '../Confirm';
 
 const useStyles = makeStyles((theme) => ({
   recTable: {
@@ -92,7 +93,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const calculatePriceEach = (item) => {
   return round(parseFloat(item.price) / item.shared).toFixed(2);
 };
@@ -123,8 +123,7 @@ function ReceiptRow(props) {
   };
 
   const onPriceChange = (event, idx) => {
-    const isNum = /^\d*\.{0,1}\d{0,2}$/.test(event.target.value);
-    if (!isNum) {
+    if (!isValidPrice(event.target.value)) {
       return;
     }
     const newItems = [...receiptItems];
@@ -189,7 +188,6 @@ function ReceiptRow(props) {
             placeholder="0.00"
             value={item.price}
             error={!item.isValid}
-            id="standard-error"
             helperText={item.isValid ? '' : 'Price is required'}
             InputProps={{
               classes: {
