@@ -1,7 +1,5 @@
 import React, {useState, useContext} from 'react';
 import {useHistory} from 'react-router-dom';
-// import {useEffect} from 'react';
-import {makeStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
@@ -11,49 +9,11 @@ import Button from '@material-ui/core/Button';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
 import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined';
 import LinearProgress from '@material-ui/core/LinearProgress';
-
 import SharedContext from './SharedContext';
-
 import ImageUploading from 'react-images-uploading';
-
 import axios from 'axios';
 import {DEFAULT_FEES, DEFAULT_ITEM} from './DefaultValues';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'block',
-    maxWidth: '400px',
-    margin: 'auto',
-  },
-  brandHeader: {
-    textAlign: 'left',
-    color: '#074EE8',
-  },
-  alert: {
-    'width': '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-  paper: {
-    width: 'auto',
-    minHeight: '200px',
-    marginBottom: '1rem',
-  },
-  buttonContainer: {
-    display: 'block',
-    padding: '20%',
-    // paddingTop: '20%',
-    textAlign: 'center',
-  },
-  imageitem: {
-    contentAlign: 'center',
-    textAlign: 'center',
-  },
-}));
+import useStyles from './styles/HomeStyles';
 
 /**
  * Converts dataURL to Blob

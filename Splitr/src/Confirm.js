@@ -1,8 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-// import Collapse from '@material-ui/core/Collapse';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -18,81 +16,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
-// import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-// import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-// import Checkbox from '@material-ui/core/Checkbox';
 import SharedContext from './SharedContext';
 import ReceiptTable from './confirm-components/ReceiptTable';
 import {DEFAULT_ITEM} from './DefaultValues';
 import {Link} from 'react-router-dom';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'block',
-    maxWidth: '450px',
-    margin: 'auto',
-    padding: '20px',
-  },
-  brandHeader: {
-    textAlign: 'left',
-    color: '#074EE8',
-  },
-  paper: {
-    width: 'auto',
-    boxShadow: '7px 8px 15px grey',
-    marginBottom: '1rem',
-  },
-  itemsTable: {
-    marginBottom: theme.spacing(2),
-  },
-  noGridLine: {
-    borderBottom: 'none',
-  },
-  tableHeader: {
-    fontWeight: 'bold',
-  },
-  addButton: {
-    margin: theme.spacing(3, 3),
-  },
-  priceField: {
-    width: 80,
-  },
-  itemTextField: {
-    fontSize: 14,
-  },
-  priceTextField: {
-    fontSize: 14,
-    textAlign: 'right',
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 12,
-    },
-  },
-  priceFeeField: {
-    width: 100,
-  },
-  priceTipField: {
-    width: 106,
-  },
-  editIconButton: {
-    marginLeft: 'auto',
-    color: '#074EE8',
-  },
-  nextButton: {
-    margin: '1rem auto',
-  },
-  totalFooter: {
-    paddingTop: '15px',
-    paddingBottom: '20px',
-  },
-  dotted: {
-    margin: 'auto',
-    marginTop: '5%',
-    marginBottom: '5%',
-    width: '90%',
-    borderTop: '#1c1b1b 2px dashed',
-  },
-}));
+import useStyles from './styles/ConfirmStyles';
 
 export const isValidPrice = (stringToTest) => {
   return /^\d*\.{0,1}\d{0,2}$/.test(stringToTest);
