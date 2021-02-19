@@ -59,11 +59,9 @@ const Pay = () => {
         <h1>SPLITR</h1>
       </Container>
       <Paper className={classes.paper}>
-
-        {console.log(splitAmount)}
+        {/* {console.log(splitAmount)} */}
         <div className={classes.buttonContainer}>
           <TextField
-            // required
             id="outlined"
             label="User"
             defaultValue=" "
