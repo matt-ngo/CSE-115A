@@ -1,29 +1,10 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 // import Collapse from '@material-ui/core/Collapse';
 import Container from '@material-ui/core/Container';
-
 import Paper from '@material-ui/core/Paper';
-
 // import SharedContext from './SharedContext';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'block',
-    maxWidth: '450px',
-    margin: 'auto',
-    padding: '20px',
-  },
-  brandHeader: {
-    textAlign: 'left',
-    color: '#074EE8',
-  },
-  paper: {
-    width: 'auto',
-    boxShadow: '7px 8px 15px grey',
-  },
-}));
+import useStyles from './styles/PayStyles';
 
 /**
  *
