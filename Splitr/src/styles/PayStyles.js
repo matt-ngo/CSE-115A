@@ -15,6 +15,19 @@ const useStyles = makeStyles((theme) => ({
     width: 'auto',
     boxShadow: '7px 8px 15px grey',
   },
+  button: {
+    margin: theme.spacing(1),
+    width: '100%',
+  },
+  buttonContainer: {
+    display: 'block',
+    padding: '20%',
+    textAlign: 'center',
+  },
+  input: {
+    width: '100%',
+    paddingBottom: '20%',
+  },
 }));
 
 export default useStyles;
