@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
+import {useHistory} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
@@ -18,7 +19,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import SharedContext from './SharedContext';
 import ReceiptTable from './confirm-components/ReceiptTable';
-import {DEFAULT_ITEM} from './DefaultValues';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {DEFAULT_ITEM, DEFAULT_ITEMS, DEFAULT_FEES} from './DefaultValues';
 import {Link} from 'react-router-dom';
 import useStyles from './styles/ConfirmStyles';
 
@@ -64,6 +66,7 @@ const round = (num) => {
  */
 function Confirm() {
   const classes = useStyles();
+  const history = useHistory();
   const [localSplitAmount, setLocalSplitAmount] = useState(0);
 
   const {
@@ -181,6 +184,17 @@ function Confirm() {
     }
   };
 
+  const onBackButtonClick = () => {
+    // Reset saved data
+    setReceiptItems(DEFAULT_ITEMS);
+    setFees(DEFAULT_FEES);
+    setIsEditing(false);
+    setSplitAmount(0);
+
+    // Go back to home page
+    history.push('/');
+  };
+
   const feesContent = (
     <TableBody>
       <TableRow key="tax">
@@ -289,6 +303,13 @@ function Confirm() {
     <div className={classes.root}>
       <CssBaseline />
       <Container className={classes.brandHeader} maxWidth="md">
+        <IconButton
+          className={classes.backIconButton}
+          edge="start"
+          onClick={onBackButtonClick}
+        >
+          <ArrowBackIcon/>
+        </IconButton>
         <h1>SPLITR</h1>
       </Container>
       <Paper className={classes.paper}>
