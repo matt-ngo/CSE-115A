@@ -153,7 +153,7 @@ function Home() {
                           formData.append('imageFile', blob);
                           const config = {
                             headers: {
-                              'apiKey': 'c74b7524-1001-4a28-a88f-c77a65c02a64',
+                              'apiKey': process.env.REACT_APP_API_KEY,
                               'content-type': 'multipart/form-data',
                             },
                           };
