@@ -64,7 +64,6 @@ const Pay = () => {
           <TextField
             id="outlined"
             label="User"
-            defaultValue=" "
             helperText="@username or phone number :)"
             variant="outlined"
             className={classes.input}
