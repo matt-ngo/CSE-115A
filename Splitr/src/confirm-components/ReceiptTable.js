@@ -172,7 +172,7 @@ function ReceiptRow(props) {
         <TableCell className={classes.cell}>
           <TextField
             placeholder="eg. Cupcakes"
-            value={item.name}
+            value={item.name.toUpperCase()}
             InputProps={{
               classes: {
                 input: classes.itemTextField,
@@ -225,7 +225,7 @@ function ReceiptRow(props) {
           </TableCell>
           {/* Item Name */}
           <TableCell className={classes.cell}>
-            <Typography variant="body1">{item.name}</Typography>
+            <Typography variant="body1">{item.name.toUpperCase()}</Typography>
           </TableCell>
           {/* Item Price */}
           <TableCell align="right" className={classes.cell}>
