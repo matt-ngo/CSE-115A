@@ -174,7 +174,7 @@ function ReceiptRow(props) {
           <Checkbox color="primary" onClick={() => onSelectItem(idx)} />
         </TableCell>
         {/* Input box */}
-        <TableCell className={classes.cell}>
+        <TableCell className={classes.cell} style={{width: '100%'}}>
           <TextField
             placeholder="eg. Cupcakes"
             value={item.name.toUpperCase()}
