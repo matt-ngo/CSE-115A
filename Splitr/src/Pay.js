@@ -1,5 +1,4 @@
-import React, {useContext} from 'react';
-import {useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import CallMadeIcon from '@material-ui/icons/CallMade';
@@ -14,7 +13,7 @@ import TextField from '@material-ui/core/TextField';
  *
  * @return {object} JSX
  */
-const Pay = () => {
+function Pay() {
   const classes = useStyles();
 
   const {splitAmount} = useContext(SharedContext);
@@ -31,11 +30,9 @@ const Pay = () => {
       '&note=Requested%20with%20SPLITR',
   );
 
-  const [userId, setUserId] = useState(' ');
+  const [userId, setUserId] = useState('');
 
-  const handleInput = (event) => {
-    setUserId(event.target.value);
-    console.log(userId);
+  const handleInput = () => {
     setPayLink(
         'https://venmo.com/?txn=pay&audience=friends&recipients=' +
         userId +
@@ -52,6 +49,10 @@ const Pay = () => {
     );
   };
 
+  useEffect(() => {
+    handleInput();
+  }, [userId]);
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -67,7 +68,10 @@ const Pay = () => {
             helperText="@username or phone number :)"
             variant="outlined"
             className={classes.input}
-            onInput={handleInput}
+            onChange={(event) => {
+              setUserId(event.target.value);
+            }}
+            value={userId}
           />
           <Button
             variant="contained"
@@ -76,6 +80,7 @@ const Pay = () => {
             className={classes.button}
             startIcon={<CallMadeIcon />}
             href={payLink}
+            target="_blank"
           >
             Pay
           </Button>
@@ -86,6 +91,7 @@ const Pay = () => {
             className={classes.button}
             startIcon={<CallReceivedIcon />}
             href={reqLink}
+            target="_blank"
           >
             Request
           </Button>
@@ -93,6 +99,6 @@ const Pay = () => {
       </Paper>
     </div>
   );
-};
+}
 
 export default Pay;
