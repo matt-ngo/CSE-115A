@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: 'unset',
     },
   },
+  rowWrappable: {
+    whiteSpace: 'normal',
+    wordWrap: 'break-word',
+  },
   noGridLine: {
     borderBottom: 'none',
   },
@@ -90,6 +94,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       padding: 5,
     },
+    width: '50px',
   },
 }));
 
@@ -169,7 +174,7 @@ function ReceiptRow(props) {
           <Checkbox color="primary" onClick={() => onSelectItem(idx)} />
         </TableCell>
         {/* Input box */}
-        <TableCell className={classes.cell}>
+        <TableCell className={classes.cell} style={{width: '100%'}}>
           <TextField
             placeholder="eg. Cupcakes"
             value={item.name.toUpperCase()}
@@ -217,7 +222,7 @@ function ReceiptRow(props) {
               {borderStyle: 'dashed', borderColor: 'red'} :
               {borderBottom: 'unset'}
           }
-          className={classes.row}
+          className={classes.row, classes.rowWrappable}
         >
           {/* Checkbox */}
           <TableCell className={classes.selectBox}>
@@ -225,10 +230,19 @@ function ReceiptRow(props) {
           </TableCell>
           {/* Item Name */}
           <TableCell className={classes.cell}>
-            <Typography variant="body1">{item.name.toUpperCase()}</Typography>
+            <Typography
+              variant="body1"
+              style={{maxWidth: '130px'}}
+            >
+              {item.name.toUpperCase()}
+            </Typography>
           </TableCell>
           {/* Item Price */}
-          <TableCell align="right" className={classes.cell}>
+          <TableCell
+            align="right"
+            className={classes.cell}
+            style={{maxWidth: '90px'}}
+          >
             <Typography variant="body1">${item.price}</Typography>
           </TableCell>
           {/* Dropdown Arrow */}
@@ -238,7 +252,7 @@ function ReceiptRow(props) {
             </IconButton>
           </TableCell>
         </TableRow>
-        <TableRow>
+        <TableRow className={classes.rowWrappable}>
           <TableCell className={classes.collapsedRow} align="center" />
           <TableCell className={classes.collapsedRow} align="center">
             <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -271,7 +285,7 @@ function ReceiptRow(props) {
             colSpan={2}
           >
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <Box marginBottom={2}>
+              <Box marginBottom={2} style={{maxWidth: '120px'}}>
                 <Typography variant="body2">
                   {`$${calculatePriceEach(item)} ea.`}
                 </Typography>
