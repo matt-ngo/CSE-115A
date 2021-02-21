@@ -171,7 +171,11 @@ function ReceiptRow(props) {
       >
         {/* Checkbox */}
         <TableCell className={classes.selectBox}>
-          <Checkbox color="primary" onClick={() => onSelectItem(idx)} />
+          <Checkbox
+            color="primary"
+            checked={item.isSelected}
+            onClick={() => onSelectItem(idx)}
+          />
         </TableCell>
         {/* Input box */}
         <TableCell className={classes.cell} style={{width: '100%'}}>
@@ -216,24 +220,18 @@ function ReceiptRow(props) {
   } else {
     return (
       <React.Fragment>
-        <TableRow
-          style={
-            !item.isValid ?
-              {borderStyle: 'dashed', borderColor: 'red'} :
-              {borderBottom: 'unset'}
-          }
-          className={classes.row, classes.rowWrappable}
-        >
+        <TableRow className={(classes.row, classes.rowWrappable)}>
           {/* Checkbox */}
           <TableCell className={classes.selectBox}>
-            <Checkbox color="primary" onClick={() => onSelectItem(idx)} />
+            <Checkbox
+              color="primary"
+              checked={item.isSelected}
+              onClick={() => onSelectItem(idx)}
+            />
           </TableCell>
           {/* Item Name */}
           <TableCell className={classes.cell}>
-            <Typography
-              variant="body1"
-              style={{maxWidth: '130px'}}
-            >
+            <Typography variant="body1" style={{maxWidth: '130px'}}>
               {item.name.toUpperCase()}
             </Typography>
           </TableCell>

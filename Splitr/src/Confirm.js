@@ -124,7 +124,7 @@ function Confirm() {
 
   const onFeesChange = (event, key) => {
     const newFees = {...fees};
-    if (!isValidPrice(event.target.value)) {
+    if (key !== 'tipType' && !isValidPrice(event.target.value)) {
       return;
     }
     newFees[key] = event.target.value;
@@ -308,7 +308,7 @@ function Confirm() {
           edge="start"
           onClick={onBackButtonClick}
         >
-          <ArrowBackIcon/>
+          <ArrowBackIcon />
         </IconButton>
         <h1>SPLITR</h1>
       </Container>
