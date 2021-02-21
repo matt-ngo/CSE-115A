@@ -8,6 +8,8 @@ import Paper from '@material-ui/core/Paper';
 import SharedContext from './SharedContext';
 import useStyles from './styles/PayStyles';
 import TextField from '@material-ui/core/TextField';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 /**
  *
@@ -15,6 +17,7 @@ import TextField from '@material-ui/core/TextField';
  */
 function Pay() {
   const classes = useStyles();
+  const history = useHistory();
 
   const {splitAmount} = useContext(SharedContext);
 
@@ -53,10 +56,21 @@ function Pay() {
     handleInput();
   }, [userId]);
 
+  const onBackButtonClick = () => {
+    history.push('/confirm');
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
       <Container className={classes.brandHeader} maxWidth="md">
+        <IconButton
+          className={classes.backIconButton}
+          edge="start"
+          onClick={onBackButtonClick}
+        >
+          <ArrowBackIcon/>
+        </IconButton>
         <h1>SPLITR</h1>
       </Container>
       <Paper className={classes.paper}>

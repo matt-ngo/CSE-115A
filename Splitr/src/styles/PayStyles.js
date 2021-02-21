@@ -8,7 +8,13 @@ const useStyles = makeStyles((theme) => ({
     padding: '20px',
   },
   brandHeader: {
+    display: 'flex',
+    alignItems: 'center',
     textAlign: 'left',
+    color: '#074EE8',
+  },
+  backIconButton: {
+    marginRight: theme.spacing(3),
     color: '#074EE8',
   },
   paper: {
