@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
-import {makeStyles} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
@@ -20,83 +19,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Checkbox from '@material-ui/core/Checkbox';
 import SharedContext from '../SharedContext';
 import {isValidPrice} from '../Confirm';
-
-const useStyles = makeStyles((theme) => ({
-  recTable: {
-    minWidth: '750',
-  },
-  row: {
-    '& > *': {
-      borderBottom: 'unset',
-    },
-  },
-  rowWrappable: {
-    whiteSpace: 'normal',
-    wordWrap: 'break-word',
-  },
-  noGridLine: {
-    borderBottom: 'none',
-  },
-  tableHeader: {
-    fontWeight: 'bold',
-    [theme.breakpoints.down('xs')]: {
-      padding: 5,
-    },
-  },
-  collapsedRow: {
-    paddingBottom: 0,
-    paddingTop: 0,
-  },
-  priceField: {
-    width: 80,
-  },
-  deleteCol: {
-    width: theme.spacing(6),
-  },
-  itemTextField: {
-    fontSize: 14,
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 12,
-    },
-  },
-  priceTextField: {
-    fontSize: 14,
-    textAlign: 'right',
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 12,
-    },
-  },
-  removeButton: {
-    position: 'absolute',
-    marginLeft: theme.spacing(3),
-  },
-  selectBox: {
-    width: '50px',
-    [theme.breakpoints.down('xs')]: {
-      padding: 5,
-    },
-  },
-  innerbox: {
-    display: 'inline',
-  },
-  shareButtons: {
-    marginTop: 5,
-    marginBottom: 10,
-    // display: 'flex',
-    // alignItems: 'center',
-  },
-  button: {
-    // marginLeft: '20%',
-    // marginRight: '2%',
-  },
-  cell: {
-    borderBottom: 'none !important',
-    [theme.breakpoints.down('xs')]: {
-      padding: 5,
-    },
-    width: '50px',
-  },
-}));
+import useStyles from '../styles/ReceiptTableStyles';
 
 const calculatePriceEach = (item) => {
   return round(parseFloat(item.price) / item.shared).toFixed(2);
@@ -171,7 +94,11 @@ function ReceiptRow(props) {
       >
         {/* Checkbox */}
         <TableCell className={classes.selectBox}>
-          <Checkbox color="primary" onClick={() => onSelectItem(idx)} />
+          <Checkbox
+            color="primary"
+            checked={item.isSelected}
+            onClick={() => onSelectItem(idx)}
+          />
         </TableCell>
         {/* Input box */}
         <TableCell className={classes.cell} style={{width: '100%'}}>
@@ -216,24 +143,18 @@ function ReceiptRow(props) {
   } else {
     return (
       <React.Fragment>
-        <TableRow
-          style={
-            !item.isValid ?
-              {borderStyle: 'dashed', borderColor: 'red'} :
-              {borderBottom: 'unset'}
-          }
-          className={classes.row, classes.rowWrappable}
-        >
+        <TableRow className={(classes.row, classes.rowWrappable)}>
           {/* Checkbox */}
           <TableCell className={classes.selectBox}>
-            <Checkbox color="primary" onClick={() => onSelectItem(idx)} />
+            <Checkbox
+              color="primary"
+              checked={item.isSelected}
+              onClick={() => onSelectItem(idx)}
+            />
           </TableCell>
           {/* Item Name */}
           <TableCell className={classes.cell}>
-            <Typography
-              variant="body1"
-              style={{maxWidth: '130px'}}
-            >
+            <Typography variant="body1" style={{maxWidth: '130px'}}>
               {item.name.toUpperCase()}
             </Typography>
           </TableCell>

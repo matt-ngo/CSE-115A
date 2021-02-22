@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useEffect, useContext} from 'react';
 import {useHistory} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -36,21 +36,25 @@ const calculateTip = (subtotal, tipValue, tipType) => {
   }
 };
 
+// Makes NaN values calculable for totals
+// Useful for user responsiveness on price changes
+const getValidPriceForTotal = (price) => {
+  return price && price !== '.' ? price : '0';
+};
+
 const calculateTotal = (items, fees) => {
   let total = 0;
   items.forEach((item) => {
-    const price = item.price ? item.price : 0;
+    const price = getValidPriceForTotal(item.price);
     total += parseFloat(price);
   });
-  const tip = fees.tip ? fees.tip : '0.00';
-  const tax = fees.tax ? fees.tax : '0.00';
-  const misc = fees.misc ? fees.misc : '0.00';
+  const tip = getValidPriceForTotal(fees.tip);
+  const tax = getValidPriceForTotal(fees.tax);
+  const misc = getValidPriceForTotal(fees.misc);
 
   total += calculateTip(total, parseFloat(tip), fees.tipType);
   total += parseFloat(tax) + parseFloat(misc);
-  if (!total || isNaN(total)) {
-    return '';
-  }
+
   return total.toFixed(2);
 };
 
@@ -67,7 +71,6 @@ const round = (num) => {
 function Confirm() {
   const classes = useStyles();
   const history = useHistory();
-  const [localSplitAmount, setLocalSplitAmount] = useState(0);
 
   const {
     fees,
@@ -85,7 +88,9 @@ function Confirm() {
     let total = 0;
     items.forEach((item) => {
       if (item.isSelected) {
-        selected += round(parseFloat(item.price) / item.shared);
+        selected += round(
+            parseFloat(getValidPriceForTotal(item.price)) / item.shared,
+        );
       }
       total += parseFloat(item.price);
     });
@@ -99,37 +104,40 @@ function Confirm() {
     );
     selected += round(percentage * parseFloat(fees.misc).toFixed(2));
 
-    setLocalSplitAmount(round(selected));
-
     return round(selected);
   };
 
+  // Updates totals when items are edited
   useEffect(() => {
-    setFees({...fees, total: calculateTotal(receiptItems, fees)});
+    setFees((prev) => {
+      const newTotal = calculateTotal(receiptItems, fees);
+      if (isNaN(newTotal)) {
+        return prev;
+      }
+      return {...fees, total: newTotal};
+    });
 
-    setLocalSplitAmount((prev) => {
+    setSplitAmount((prev) => {
       const newSplitAmount = calculateSplit(receiptItems, fees);
-      if (newSplitAmount !== localSplitAmount) {
+
+      if (!isNaN(newSplitAmount) && newSplitAmount !== prev) {
         return newSplitAmount;
       }
       return prev;
     });
   }, [receiptItems]);
 
-  useEffect(() => {
-    if (splitAmount !== localSplitAmount) {
-      setSplitAmount(localSplitAmount);
-    }
-  }, [localSplitAmount]);
-
   const onFeesChange = (event, key) => {
     const newFees = {...fees};
-    if (!isValidPrice(event.target.value)) {
+    if (key !== 'tipType' && !isValidPrice(event.target.value)) {
       return;
     }
     newFees[key] = event.target.value;
 
-    newFees.total = calculateTotal(receiptItems, newFees);
+    const newTotal = calculateTotal(receiptItems, newFees);
+    if (!isNaN(newTotal)) {
+      newFees.total = newTotal;
+    }
     setFees(newFees);
   };
 
@@ -167,12 +175,9 @@ function Confirm() {
 
       // Format values of tax, tip, misc fees
       setFees(() => {
-        let newTax = formatPrice(fees.tax);
-        let newTip = formatPrice(fees.tip);
-        let newMisc = formatPrice(fees.misc);
-        newTax = newTax ? newTax : '0.00';
-        newTip = newTip ? newTip : '0.00';
-        newMisc = newMisc ? newMisc : '0.00';
+        const newTax = formatPrice(getValidPriceForTotal(fees.tax));
+        const newTip = formatPrice(getValidPriceForTotal(fees.tip));
+        const newMisc = formatPrice(getValidPriceForTotal(fees.misc));
         return {...fees, tax: newTax, tip: newTip, misc: newMisc};
       });
 
@@ -308,7 +313,7 @@ function Confirm() {
           edge="start"
           onClick={onBackButtonClick}
         >
-          <ArrowBackIcon/>
+          <ArrowBackIcon />
         </IconButton>
         <h1>SPLITR</h1>
       </Container>
