@@ -159,7 +159,7 @@ function Home() {
                           };
                           axios
                               .post(
-                                  'https://api.cloudmersive.com' +
+                                  'https://api-na-us1-premium.cloudmersive.com' +
                                 '/ocr/photo/recognize/receipt',
                                   formData,
                                   config,
