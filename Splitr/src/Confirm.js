@@ -4,15 +4,11 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
@@ -26,6 +22,7 @@ import {Link} from 'react-router-dom';
 import useStyles from './styles/ConfirmStyles';
 import ShareModal from './confirm-components/ShareModal';
 import queryString from 'query-string';
+import FeesContent from './confirm-components/FeesContent';
 
 export const isValidPrice = (stringToTest) => {
   return /^\d*\.{0,1}\d{0,2}$/.test(stringToTest);
@@ -260,97 +257,6 @@ function Confirm() {
     history.push('/');
   };
 
-  const feesContent = (
-    <TableBody>
-      <TableRow key="tax">
-        <TableCell className={classes.noGridLine}>
-          <Typography variant="body1">Tax</Typography>
-        </TableCell>
-        <TableCell className={classes.noGridLine} align="right">
-          {isEditing ? (
-            <TextField
-              className={classes.priceFeeField}
-              value={fees.tax}
-              InputProps={{
-                classes: {
-                  input: classes.priceTextField,
-                },
-                startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
-                ),
-              }}
-              onChange={(e) => onFeesChange(e, 'tax')}
-            />
-          ) : (
-            <Typography variant="body1">${fees.tax}</Typography>
-          )}
-        </TableCell>
-      </TableRow>
-      <TableRow key="tip">
-        <TableCell className={classes.noGridLine}>
-          <Typography variant="body1">Tip</Typography>
-        </TableCell>
-        <TableCell className={classes.noGridLine} align="right">
-          {isEditing ? (
-            <TextField
-              className={classes.priceTipField}
-              value={fees.tip}
-              InputProps={{
-                classes: {
-                  input: classes.priceTextField,
-                },
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Select
-                      value={fees.tipType}
-                      onChange={(e) => onFeesChange(e, 'tipType')}
-                    >
-                      <MenuItem value="$">$</MenuItem>
-                      <MenuItem value="%">%</MenuItem>
-                    </Select>
-                  </InputAdornment>
-                ),
-              }}
-              onChange={(e) => onFeesChange(e, 'tip')}
-            />
-          ) : fees.tipType == '%' ? (
-            <Typography variant="body1">{fees.tip}%</Typography>
-          ) : (
-            <Typography variant="body1">${fees.tip}</Typography>
-          )}
-        </TableCell>
-      </TableRow>
-      <TableRow key="misc">
-        <TableCell className={classes.noGridLine}>Misc. Fees</TableCell>
-        <TableCell className={classes.noGridLine} align="right">
-          {isEditing ? (
-            <TextField
-              className={classes.priceFeeField}
-              value={fees.misc}
-              InputProps={{
-                classes: {
-                  input: classes.priceTextField,
-                },
-                startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
-                ),
-              }}
-              onChange={(e) => onFeesChange(e, 'misc')}
-            />
-          ) : (
-            <Typography variant="body1">${fees.misc}</Typography>
-          )}
-        </TableCell>
-      </TableRow>
-      <TableRow key="total">
-        <TableCell className={classes.noGridLine}>Total</TableCell>
-        <TableCell className={classes.noGridLine} align="right">
-          {`$${fees.total}`}
-        </TableCell>
-      </TableRow>
-    </TableBody>
-  );
-
   const splitContent = (
     <TableBody>
       <TableRow>
@@ -414,7 +320,7 @@ function Confirm() {
         <div className={classes.dotted}></div>
 
         <div className={classes.totalFooter}>
-          <Table size="small">{feesContent}</Table>
+          <FeesContent onFeesChange={onFeesChange} />
 
           {isEditing ? null : <Table>{splitContent}</Table>}
 
