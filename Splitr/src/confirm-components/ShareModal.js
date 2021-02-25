@@ -100,7 +100,7 @@ function ShareModal({setIsShareModalOpen}) {
             readOnly
           />
         </div>
-        <div>
+        <div className={classes.shareModalButtonContainer}>
           <Button
             className={classes.copyShareLinkButton}
             variant="contained"

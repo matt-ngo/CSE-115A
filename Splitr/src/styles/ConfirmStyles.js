@@ -82,6 +82,10 @@ const useStyles = makeStyles((theme) => ({
   modalBody: {
     margin: '1rem',
   },
+  shareModalButtonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
 }));
 
 export default useStyles;
