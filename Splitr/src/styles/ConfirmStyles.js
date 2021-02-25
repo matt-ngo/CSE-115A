@@ -71,6 +71,17 @@ const useStyles = makeStyles((theme) => ({
     width: '90%',
     borderTop: '#1c1b1b 2px dashed',
   },
+  copyShareLinkButton: {
+    margin: '.5rem auto',
+    textAlign: 'center',
+  },
+  shareLink: {
+    margin: '1rem auto',
+    overflow: 'auto',
+  },
+  modalBody: {
+    margin: '1rem',
+  },
 }));
 
 export default useStyles;

@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,12 +17,15 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
+import ShareIcon from '@material-ui/icons/Share';
 import SharedContext from './SharedContext';
 import ReceiptTable from './confirm-components/ReceiptTable';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {DEFAULT_ITEM, DEFAULT_ITEMS, DEFAULT_FEES} from './DefaultValues';
 import {Link} from 'react-router-dom';
 import useStyles from './styles/ConfirmStyles';
+import ShareModal from './confirm-components/ShareModal';
+import queryString from 'query-string';
 
 export const isValidPrice = (stringToTest) => {
   return /^\d*\.{0,1}\d{0,2}$/.test(stringToTest);
@@ -34,6 +37,41 @@ const calculateTip = (subtotal, tipValue, tipType) => {
   } else {
     return tipValue;
   }
+};
+
+const getItemsFromQueryString = () => {
+  const newItems = [];
+  const query = window.location.search;
+  if (!query) {
+    return null;
+  }
+  const queries = queryString.parse(query);
+
+  let i = 0;
+  while (true) {
+    const item = queries[`item${i}`];
+    const price = queries[`price${i}`];
+    const shared = queries[`shared${i}`];
+    console.log(shared);
+
+    if (item && price && shared) {
+      const newItem = {
+        ...DEFAULT_ITEM,
+        name: item,
+        price,
+        shared,
+      };
+      newItems.push(newItem);
+      i++;
+    } else {
+      break;
+    }
+  }
+
+  if (!newItems.length) {
+    return null;
+  }
+  return newItems;
 };
 
 // Makes NaN values calculable for totals
@@ -72,6 +110,8 @@ function Confirm() {
   const classes = useStyles();
   const history = useHistory();
 
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
   const {
     fees,
     receiptItems,
@@ -106,6 +146,14 @@ function Confirm() {
 
     return round(selected);
   };
+
+  // Populates field with data based on query string
+  useEffect(() => {
+    const newItems = getItemsFromQueryString();
+    if (newItems) {
+      setReceiptItems(newItems);
+    }
+  }, []);
 
   // Updates totals when items are edited
   useEffect(() => {
@@ -322,6 +370,11 @@ function Confirm() {
           <Typography variant="h6">
             {isEditing ? 'Edit Receipt' : 'Select Items'}
           </Typography>
+          {!isEditing && (
+            <IconButton onClick={() => setIsShareModalOpen(true)}>
+              <ShareIcon />
+            </IconButton>
+          )}
           <IconButton
             className={classes.editIconButton}
             edge="end"
@@ -330,6 +383,7 @@ function Confirm() {
             {isEditing ? <SaveIcon /> : <EditIcon />}
           </IconButton>
         </Toolbar>
+
         <ReceiptTable />
 
         {isEditing ? (
@@ -367,6 +421,9 @@ function Confirm() {
           )}
         </div>
       </Paper>
+      {isShareModalOpen && (
+        <ShareModal setIsShareModalOpen={setIsShareModalOpen} />
+      )}
     </div>
   );
 }
