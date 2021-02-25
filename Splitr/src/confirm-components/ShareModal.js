@@ -5,12 +5,11 @@ import Paper from '@material-ui/core/Paper';
 import SharedContext from '../SharedContext';
 import useStyles from '../styles/ConfirmStyles';
 import axios from 'axios';
-const tinyURLKey = '5275e41b7e69ca607ced6a706825ef097f69ef47';
 
 const getTinyURL = async (url, setShareLink) => {
   const config = {
     headers: {
-      'Authorization': `Bearer ${tinyURLKey}`,
+      'Authorization': `Bearer ${process.env.REACT_APP_TINY_URL_KEY}`,
       'Content-Type': 'application/json',
     },
   };
@@ -66,6 +65,7 @@ const getShareLink = () => {
   return newLink;
 };
 
+// Copies the link to the clipboard
 const copyLink = () => {
   const link = document.getElementById('linkText');
   link.select();
@@ -79,7 +79,7 @@ const ShareModal = ({setIsShareModalOpen}) => {
 
   useEffect(() => {
     getTinyURL(shareLink, setShareLink);
-  }, [shareLink]);
+  }, []);
 
   const Body = () => {
     const classes = useStyles();
