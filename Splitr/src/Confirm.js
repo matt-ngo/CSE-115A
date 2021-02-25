@@ -64,6 +64,10 @@ const getItemsFromQueryString = () => {
     }
   }
 
+  if (newItems.length === 0) {
+    return null;
+  }
+
   return newItems;
 };
 
