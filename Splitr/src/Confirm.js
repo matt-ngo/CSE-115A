@@ -43,7 +43,7 @@ const getItemsFromQueryString = () => {
   const newItems = [];
   const query = window.location.search;
   if (!query) {
-    return null;
+    return newItems;
   }
   const queries = queryString.parse(query);
 
@@ -52,14 +52,13 @@ const getItemsFromQueryString = () => {
     const item = queries[`item${i}`];
     const price = queries[`price${i}`];
     const shared = queries[`shared${i}`];
-    console.log(shared);
 
     if (item && price && shared) {
       const newItem = {
         ...DEFAULT_ITEM,
         name: item,
         price,
-        shared,
+        shared: parseInt(shared),
       };
       newItems.push(newItem);
       i++;
@@ -68,10 +67,25 @@ const getItemsFromQueryString = () => {
     }
   }
 
-  if (!newItems.length) {
-    return null;
-  }
   return newItems;
+};
+
+const getFeesFromQueryString = () => {
+  const query = window.location.search;
+  if (!query) {
+    return {...DEFAULT_FEES};
+  }
+  const queries = queryString.parse(query);
+
+  const tax = queries['tax'];
+  const tip = queries['tip'];
+  const tipType = queries['tip_type'];
+  const misc = queries['misc_fees'];
+
+  if (tax && tip && tipType && misc) {
+    return {...DEFAULT_FEES, tax, tip, tipType, misc};
+  }
+  return {...DEFAULT_FEES};
 };
 
 // Makes NaN values calculable for totals
@@ -149,10 +163,8 @@ function Confirm() {
 
   // Populates field with data based on query string
   useEffect(() => {
-    const newItems = getItemsFromQueryString();
-    if (newItems) {
-      setReceiptItems(newItems);
-    }
+    setReceiptItems(getItemsFromQueryString());
+    setFees(getFeesFromQueryString());
   }, []);
 
   // Updates totals when items are edited
@@ -162,7 +174,7 @@ function Confirm() {
       if (isNaN(newTotal)) {
         return prev;
       }
-      return {...fees, total: newTotal};
+      return {...prev, total: newTotal};
     });
 
     setSplitAmount((prev) => {

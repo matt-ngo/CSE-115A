@@ -1,15 +1,49 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import propTypes from 'prop-types';
 import {Button, Dialog} from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import SharedContext from '../SharedContext';
 import useStyles from '../styles/ConfirmStyles';
+import axios from 'axios';
+const tinyURLKey = '5275e41b7e69ca607ced6a706825ef097f69ef47';
+
+const getTinyURL = async (url, setShareLink) => {
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${tinyURLKey}`,
+      'Content-Type': 'application/json',
+    },
+  };
+
+  // Only useful for development purposes
+  // (bit.ly rejects requests otherwise)
+  url = url.replace('localhost', '127.0.0.1');
+
+  const request = `https://api-ssl.bitly.com/v4/shorten`;
+  const data = await axios
+      .post(request, {long_url: url}, config)
+      .then((response) => {
+        if (response.status < 200 || response.status >= 300) {
+          return;
+        }
+        console.log('Succesfully retrieved bit.ly link');
+        return response.data;
+      })
+      .catch((err) => {
+        return console.log(err);
+      });
+
+  if (data) {
+    setShareLink(data.link);
+  }
+};
 
 const getShareLink = () => {
   const baseURL = /^.*confirm/.exec(window.location.href);
   let newLink = baseURL + '/?';
-  const {receiptItems} = useContext(SharedContext);
+  const {receiptItems, fees} = useContext(SharedContext);
 
+  // Add all items to the link
   for (let i = 0; i < receiptItems.length; i++) {
     const newItem = `${i > 0 ? '&' : ''}item${i}=${encodeURIComponent(
         receiptItems[i].name,
@@ -18,8 +52,16 @@ const getShareLink = () => {
     const newShared = `&shared${i}=${encodeURIComponent(
         receiptItems[i].shared,
     )}`;
+
     newLink += newItem + newPrice + newShared;
   }
+
+  // Add fees to the link
+  newLink += `&tax=${encodeURIComponent(fees.tax)}&tip=${encodeURIComponent(
+      fees.tip,
+  )}&tip_type=${encodeURIComponent(
+      fees.tipType,
+  )}&misc_fees=${encodeURIComponent(fees.misc)}`;
 
   return newLink;
 };
@@ -33,7 +75,11 @@ const copyLink = () => {
 
 const ShareModal = ({setIsShareModalOpen}) => {
   const classes = useStyles();
-  const shareLink = getShareLink();
+  const [shareLink, setShareLink] = useState(getShareLink());
+
+  useEffect(() => {
+    getTinyURL(shareLink, setShareLink);
+  }, [shareLink]);
 
   const Body = () => {
     const classes = useStyles();
