@@ -40,7 +40,7 @@ const getItemsFromQueryString = () => {
   const newItems = [];
   const query = window.location.search;
   if (!query) {
-    return newItems;
+    return null;
   }
   const queries = queryString.parse(query);
 
@@ -70,7 +70,7 @@ const getItemsFromQueryString = () => {
 const getFeesFromQueryString = () => {
   const query = window.location.search;
   if (!query) {
-    return {...DEFAULT_FEES};
+    return null;
   }
   const queries = queryString.parse(query);
 
@@ -82,7 +82,7 @@ const getFeesFromQueryString = () => {
   if (tax && tip && tipType && misc) {
     return {...DEFAULT_FEES, tax, tip, tipType, misc};
   }
-  return {...DEFAULT_FEES};
+  return null;
 };
 
 // Makes NaN values calculable for totals
@@ -136,8 +136,20 @@ function Confirm() {
 
   // Populates field with data based on query string
   useEffect(() => {
-    setReceiptItems(getItemsFromQueryString());
-    setFees(getFeesFromQueryString());
+    setReceiptItems((prev) => {
+      const newItems = getItemsFromQueryString();
+      if (newItems) {
+        return newItems;
+      }
+      return prev;
+    });
+    setFees((prev) => {
+      const newFees = getFeesFromQueryString();
+      if (newFees) {
+        return newFees;
+      }
+      return prev;
+    });
   }, []);
 
   // Updates totals when items are edited
