@@ -9,7 +9,11 @@ import Typography from '@material-ui/core/Typography';
 import useStyles from '../styles/ConfirmStyles';
 import SharedContext from '../SharedContext';
 
-const FeesContent = ({onFeesChange}) => {
+/**
+ *
+ * @return {object} JSX
+ */
+function FeesContent({onFeesChange}) {
   const classes = useStyles();
 
   const {fees, isEditing} = useContext(SharedContext);
@@ -106,7 +110,7 @@ const FeesContent = ({onFeesChange}) => {
       </TableBody>
     </Table>
   );
-};
+}
 
 FeesContent.propTypes = {onFeesChange: propTypes.func};
 

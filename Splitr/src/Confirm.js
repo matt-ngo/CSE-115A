@@ -134,30 +134,6 @@ function Confirm() {
     splitAmount,
   } = useContext(SharedContext);
 
-  const calculateSplit = (items, fees) => {
-    let selected = 0;
-    let total = 0;
-    items.forEach((item) => {
-      if (item.isSelected) {
-        selected += round(
-            parseFloat(getValidPriceForTotal(item.price)) / item.shared,
-        );
-      }
-      total += parseFloat(item.price);
-    });
-
-    const percentage = total === 0 ? 0 : selected / total;
-    // calc and add fraction of tax and tip
-    selected += round(percentage * parseFloat(fees.tax).toFixed(2));
-    selected += round(
-        percentage *
-        calculateTip(total, parseFloat(fees.tip), fees.tipType).toFixed(2),
-    );
-    selected += round(percentage * parseFloat(fees.misc).toFixed(2));
-
-    return round(selected);
-  };
-
   // Populates field with data based on query string
   useEffect(() => {
     setReceiptItems(getItemsFromQueryString());
@@ -183,6 +159,30 @@ function Confirm() {
       return prev;
     });
   }, [receiptItems]);
+
+  const calculateSplit = (items, fees) => {
+    let selected = 0;
+    let total = 0;
+    items.forEach((item) => {
+      if (item.isSelected) {
+        selected += round(
+            parseFloat(getValidPriceForTotal(item.price)) / item.shared,
+        );
+      }
+      total += parseFloat(item.price);
+    });
+
+    const percentage = total === 0 ? 0 : selected / total;
+    // calc and add fraction of tax and tip
+    selected += round(percentage * parseFloat(fees.tax).toFixed(2));
+    selected += round(
+        percentage *
+        calculateTip(total, parseFloat(fees.tip), fees.tipType).toFixed(2),
+    );
+    selected += round(percentage * parseFloat(fees.misc).toFixed(2));
+
+    return round(selected);
+  };
 
   const onFeesChange = (event, key) => {
     const newFees = {...fees};

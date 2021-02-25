@@ -73,7 +73,12 @@ const copyLink = () => {
   document.execCommand('copy');
 };
 
-const ShareModal = ({setIsShareModalOpen}) => {
+/**
+ * Share Modal Component
+ *
+ * @return {object} JSX
+ */
+function ShareModal({setIsShareModalOpen}) {
   const classes = useStyles();
   const [shareLink, setShareLink] = useState(getShareLink());
 
@@ -114,7 +119,7 @@ const ShareModal = ({setIsShareModalOpen}) => {
       </Dialog>
     </Paper>
   );
-};
+}
 ShareModal.propTypes = {setIsShareModalOpen: propTypes.func};
 
 export default ShareModal;
