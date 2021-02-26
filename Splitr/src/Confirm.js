@@ -1,28 +1,28 @@
-import React, {useEffect, useContext} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
+import ShareIcon from '@material-ui/icons/Share';
 import SharedContext from './SharedContext';
 import ReceiptTable from './confirm-components/ReceiptTable';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {DEFAULT_ITEM, DEFAULT_ITEMS, DEFAULT_FEES} from './DefaultValues';
 import {Link} from 'react-router-dom';
 import useStyles from './styles/ConfirmStyles';
+import ShareModal from './confirm-components/ShareModal';
+import queryString from 'query-string';
+import FeesContent from './confirm-components/FeesContent';
 
 export const isValidPrice = (stringToTest) => {
   return /^\d*\.{0,1}\d{0,2}$/.test(stringToTest);
@@ -34,6 +34,59 @@ const calculateTip = (subtotal, tipValue, tipType) => {
   } else {
     return tipValue;
   }
+};
+
+const getItemsFromQueryString = () => {
+  const newItems = [];
+  const query = window.location.search;
+  if (!query) {
+    return null;
+  }
+  const queries = queryString.parse(query);
+
+  let i = 0;
+  while (true) {
+    const item = queries[`item${i}`];
+    const price = queries[`price${i}`];
+    const shared = queries[`shared${i}`];
+
+    if (item && price && shared) {
+      const newItem = {
+        ...DEFAULT_ITEM,
+        name: item,
+        price,
+        shared: parseInt(shared),
+      };
+      newItems.push(newItem);
+      i++;
+    } else {
+      break;
+    }
+  }
+
+  if (newItems.length === 0) {
+    return null;
+  }
+
+  return newItems;
+};
+
+const getFeesFromQueryString = () => {
+  const query = window.location.search;
+  if (!query) {
+    return null;
+  }
+  const queries = queryString.parse(query);
+
+  const tax = queries['tax'];
+  const tip = queries['tip'];
+  const tipType = queries['tip_type'];
+  const misc = queries['misc_fees'];
+
+  if (tax && tip && tipType && misc) {
+    return {...DEFAULT_FEES, tax, tip, tipType, misc};
+  }
+  return null;
 };
 
 // Makes NaN values calculable for totals
@@ -72,6 +125,8 @@ function Confirm() {
   const classes = useStyles();
   const history = useHistory();
 
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
   const {
     fees,
     receiptItems,
@@ -82,6 +137,44 @@ function Confirm() {
     setSplitAmount,
     splitAmount,
   } = useContext(SharedContext);
+
+  // Populates field with data based on query string
+  useEffect(() => {
+    setReceiptItems((prev) => {
+      const newItems = getItemsFromQueryString();
+      if (newItems) {
+        return newItems;
+      }
+      return prev;
+    });
+    setFees((prev) => {
+      const newFees = getFeesFromQueryString();
+      if (newFees) {
+        return newFees;
+      }
+      return prev;
+    });
+  }, []);
+
+  // Updates totals when items are edited
+  useEffect(() => {
+    setFees((prev) => {
+      const newTotal = calculateTotal(receiptItems, fees);
+      if (isNaN(newTotal)) {
+        return prev;
+      }
+      return {...prev, total: newTotal};
+    });
+
+    setSplitAmount((prev) => {
+      const newSplitAmount = calculateSplit(receiptItems, fees);
+
+      if (!isNaN(newSplitAmount) && newSplitAmount !== prev) {
+        return newSplitAmount;
+      }
+      return prev;
+    });
+  }, [receiptItems]);
 
   const calculateSplit = (items, fees) => {
     let selected = 0;
@@ -106,26 +199,6 @@ function Confirm() {
 
     return round(selected);
   };
-
-  // Updates totals when items are edited
-  useEffect(() => {
-    setFees((prev) => {
-      const newTotal = calculateTotal(receiptItems, fees);
-      if (isNaN(newTotal)) {
-        return prev;
-      }
-      return {...fees, total: newTotal};
-    });
-
-    setSplitAmount((prev) => {
-      const newSplitAmount = calculateSplit(receiptItems, fees);
-
-      if (!isNaN(newSplitAmount) && newSplitAmount !== prev) {
-        return newSplitAmount;
-      }
-      return prev;
-    });
-  }, [receiptItems]);
 
   const onFeesChange = (event, key) => {
     const newFees = {...fees};
@@ -200,97 +273,6 @@ function Confirm() {
     history.push('/');
   };
 
-  const feesContent = (
-    <TableBody>
-      <TableRow key="tax">
-        <TableCell className={classes.noGridLine}>
-          <Typography variant="body1">Tax</Typography>
-        </TableCell>
-        <TableCell className={classes.noGridLine} align="right">
-          {isEditing ? (
-            <TextField
-              className={classes.priceFeeField}
-              value={fees.tax}
-              InputProps={{
-                classes: {
-                  input: classes.priceTextField,
-                },
-                startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
-                ),
-              }}
-              onChange={(e) => onFeesChange(e, 'tax')}
-            />
-          ) : (
-            <Typography variant="body1">${fees.tax}</Typography>
-          )}
-        </TableCell>
-      </TableRow>
-      <TableRow key="tip">
-        <TableCell className={classes.noGridLine}>
-          <Typography variant="body1">Tip</Typography>
-        </TableCell>
-        <TableCell className={classes.noGridLine} align="right">
-          {isEditing ? (
-            <TextField
-              className={classes.priceTipField}
-              value={fees.tip}
-              InputProps={{
-                classes: {
-                  input: classes.priceTextField,
-                },
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Select
-                      value={fees.tipType}
-                      onChange={(e) => onFeesChange(e, 'tipType')}
-                    >
-                      <MenuItem value="$">$</MenuItem>
-                      <MenuItem value="%">%</MenuItem>
-                    </Select>
-                  </InputAdornment>
-                ),
-              }}
-              onChange={(e) => onFeesChange(e, 'tip')}
-            />
-          ) : fees.tipType == '%' ? (
-            <Typography variant="body1">{fees.tip}%</Typography>
-          ) : (
-            <Typography variant="body1">${fees.tip}</Typography>
-          )}
-        </TableCell>
-      </TableRow>
-      <TableRow key="misc">
-        <TableCell className={classes.noGridLine}>Misc. Fees</TableCell>
-        <TableCell className={classes.noGridLine} align="right">
-          {isEditing ? (
-            <TextField
-              className={classes.priceFeeField}
-              value={fees.misc}
-              InputProps={{
-                classes: {
-                  input: classes.priceTextField,
-                },
-                startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
-                ),
-              }}
-              onChange={(e) => onFeesChange(e, 'misc')}
-            />
-          ) : (
-            <Typography variant="body1">${fees.misc}</Typography>
-          )}
-        </TableCell>
-      </TableRow>
-      <TableRow key="total">
-        <TableCell className={classes.noGridLine}>Total</TableCell>
-        <TableCell className={classes.noGridLine} align="right">
-          {`$${fees.total}`}
-        </TableCell>
-      </TableRow>
-    </TableBody>
-  );
-
   const splitContent = (
     <TableBody>
       <TableRow>
@@ -322,6 +304,11 @@ function Confirm() {
           <Typography variant="h6">
             {isEditing ? 'Edit Receipt' : 'Select Items'}
           </Typography>
+          {!isEditing && (
+            <IconButton onClick={() => setIsShareModalOpen(true)}>
+              <ShareIcon />
+            </IconButton>
+          )}
           <IconButton
             className={classes.editIconButton}
             edge="end"
@@ -330,6 +317,7 @@ function Confirm() {
             {isEditing ? <SaveIcon /> : <EditIcon />}
           </IconButton>
         </Toolbar>
+
         <ReceiptTable />
 
         {isEditing ? (
@@ -348,7 +336,7 @@ function Confirm() {
         <div className={classes.dotted}></div>
 
         <div className={classes.totalFooter}>
-          <Table size="small">{feesContent}</Table>
+          <FeesContent onFeesChange={onFeesChange} />
 
           {isEditing ? null : <Table>{splitContent}</Table>}
 
@@ -367,6 +355,9 @@ function Confirm() {
           )}
         </div>
       </Paper>
+      {isShareModalOpen && (
+        <ShareModal setIsShareModalOpen={setIsShareModalOpen} />
+      )}
     </div>
   );
 }
