@@ -54,7 +54,6 @@ function Home() {
     if (
       str.includes('total') ||
       str.includes('tax') ||
-      str.includes('tip') ||
       str.includes('gratuity')
     ) {
       return false;
