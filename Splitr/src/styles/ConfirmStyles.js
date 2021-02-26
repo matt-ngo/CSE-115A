@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     textAlign: 'left',
-    color: '#074EE8',
+    color: '#078080',
   },
   paper: {
     width: 'auto',
@@ -51,11 +51,11 @@ const useStyles = makeStyles((theme) => ({
   },
   backIconButton: {
     marginRight: theme.spacing(3),
-    color: '#074EE8',
+    color: '#078080',
   },
   editIconButton: {
     marginLeft: 'auto',
-    color: '#074EE8',
+    color: '#078080',
   },
   nextButton: {
     margin: '1rem auto',

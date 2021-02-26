@@ -8,7 +8,8 @@ const useStyles = makeStyles((theme) => ({
   },
   brandHeader: {
     textAlign: 'left',
-    color: '#074EE8',
+    color: '#078080',
+    // color: '#074EE8', //blue
   },
   alert: {
     'width': '100%',

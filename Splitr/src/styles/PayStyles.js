@@ -11,11 +11,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     textAlign: 'left',
-    color: '#074EE8',
+    color: '#078080',
   },
   backIconButton: {
     marginRight: theme.spacing(3),
-    color: '#074EE8',
+    color: '#078080',
   },
   paper: {
     width: 'auto',
