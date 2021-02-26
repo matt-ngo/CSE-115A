@@ -42,7 +42,7 @@ function Home() {
   const [images, setImages] = useState([]);
   const maxNumber = 1;
   const acceptType = ['jpg', 'gif', 'png'];
-  const maxFileSize = 3 * 1000000;
+  const maxFileSize = 1000000000;
 
   const onChange = (imageList, addUpdateIndex) => {
     console.log(imageList, addUpdateIndex);
@@ -108,8 +108,7 @@ function Home() {
                     )}
                     {errors.maxFileSize && (
                       <Alert severity="error">
-                        Selected file size exceeds the limit of{' '}
-                        {maxFileSize / 1000000} MB
+                        Selected file size exceeds the limit of 1 GB
                       </Alert>
                     )}
                   </div>
