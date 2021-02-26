@@ -30,6 +30,13 @@ const useStyles = makeStyles((theme) => ({
     padding: '20%',
     textAlign: 'center',
   },
+  msgContainer: {
+    display: 'block',
+    padding: '15%',
+    paddingTop: '30%',
+    paddingBottom: '30%',
+    textAlign: 'center',
+  },
   input: {
     width: '100%',
     paddingBottom: '20%',

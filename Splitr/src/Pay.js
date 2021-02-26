@@ -1,5 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
+import {useTheme} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import CallMadeIcon from '@material-ui/icons/CallMade';
@@ -11,6 +12,8 @@ import useStyles from './styles/PayStyles';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Typography from '@material-ui/core/Typography';
 
 /**
  *
@@ -23,13 +26,15 @@ function Pay() {
   const {splitAmount} = useContext(SharedContext);
 
   // todo: don't allow button push if user field is blank
+  // web = https://venmo.com/
+  // direct = venmo://paycharge
   const [payLink, setPayLink] = useState(
-      'https://venmo.com/?txn=pay&audience=friends&recipients=NoneSpecified&amount=' +
+      'venmo://paycharge?txn=pay&audience=friends&recipients=NoneSpecified&amount=' +
       splitAmount +
       '&note=Paid%20with%20SPLITR',
   );
   const [reqLink, setReqLink] = useState(
-      'https://venmo.com/?txn=charge&audience=friends&recipients=NoneSpecified&amount=' +
+      'venmo://paycharge?txn=charge&audience=friends&recipients=NoneSpecified&amount=' +
       splitAmount +
       '&note=Requested%20with%20SPLITR',
   );
@@ -38,14 +43,14 @@ function Pay() {
 
   const handleInput = () => {
     setPayLink(
-        'https://venmo.com/?txn=pay&audience=friends&recipients=' +
+        'venmo://paycharge?txn=pay&audience=friends&recipients=' +
         userId +
         '&amount=' +
         splitAmount +
         '&note=Paid%20with%20SPLITR',
     );
     setReqLink(
-        'https://venmo.com/?txn=charge&audience=friends&recipients=' +
+        'venmo://paycharge?txn=charge&audience=friends&recipients=' +
         userId +
         '&amount=' +
         splitAmount +
@@ -61,6 +66,63 @@ function Pay() {
     history.push('/confirm');
   };
 
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
+
+  const mobileContent = (
+    <div className={classes.buttonContainer}>
+      <TextField
+        id="outlined"
+        label="User"
+        helperText="@username or phone number :)"
+        variant="outlined"
+        className={classes.input}
+        onChange={(event) => {
+          setUserId(event.target.value);
+        }}
+        value={userId}
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        className={classes.button}
+        startIcon={<CallMadeIcon />}
+        href={payLink}
+        target="_blank"
+      >
+        Pay
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        className={classes.button}
+        startIcon={<CallReceivedIcon />}
+        href={reqLink}
+        target="_blank"
+      >
+        Request
+      </Button>
+    </div>
+  );
+
+  const desktopContent = (
+    <div className={classes.msgContainer}>
+      <Typography variant="subtitle1" className={classes.msg}>
+        Our sensors indicate you&apos;re using SPLITR on desktop!
+        <br></br> <br></br>
+        To use our Venmo integration, use SPLITR on your mobile device :)
+        <br></br> <br></br>
+      </Typography>
+
+      <Typography variant="h6">Your Split:</Typography>
+      <Typography variant="h6">
+        <div>{`$${splitAmount.toFixed(2)}`}</div>
+      </Typography>
+    </div>
+  );
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -70,47 +132,12 @@ function Pay() {
           edge="start"
           onClick={onBackButtonClick}
         >
-          <ArrowBackIcon/>
+          <ArrowBackIcon />
         </IconButton>
         <h1>SPLITR</h1>
       </Container>
       <Paper className={classes.paper}>
-        {/* {console.log(splitAmount)} */}
-        <div className={classes.buttonContainer}>
-          <TextField
-            id="outlined"
-            label="User"
-            helperText="@username or phone number :)"
-            variant="outlined"
-            className={classes.input}
-            onChange={(event) => {
-              setUserId(event.target.value);
-            }}
-            value={userId}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            className={classes.button}
-            startIcon={<CallMadeIcon />}
-            href={payLink}
-            target="_blank"
-          >
-            Pay
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            className={classes.button}
-            startIcon={<CallReceivedIcon />}
-            href={reqLink}
-            target="_blank"
-          >
-            Request
-          </Button>
-        </div>
+        {matches ? desktopContent : mobileContent}
       </Paper>
     </div>
   );
