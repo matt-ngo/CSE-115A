@@ -49,6 +49,18 @@ function Home() {
     setImages(imageList);
   };
 
+  const isValidItem = (itemName) => {
+    const str = itemName.toLowerCase().replace(/[т]/g, (c) => 't');
+    if (
+      str.includes('total') ||
+      str.includes('tax') ||
+      str.includes('gratuity')
+    ) {
+      return false;
+    }
+    return true;
+  };
+
   const [loading, setLoading] = useState(false);
   const {setReceiptItems, setFees, setIsEditing} = useContext(SharedContext);
 
@@ -169,14 +181,16 @@ function Home() {
                                 console.log(response);
                                 const receiptItems = [];
                                 response.data.ReceiptItems.forEach((item) => {
-                                  receiptItems.push({
-                                    ...DEFAULT_ITEM,
-                                    name: item.ItemDescription,
-                                    price:
-                                    item.ItemPrice !== null ?
-                                      item.ItemPrice.toString() :
-                                      '0',
-                                  });
+                                  if (isValidItem(item.ItemDescription)) {
+                                    receiptItems.push({
+                                      ...DEFAULT_ITEM,
+                                      name: item.ItemDescription,
+                                      price:
+                                      item.ItemPrice !== null ?
+                                        item.ItemPrice.toString() :
+                                        '0',
+                                    });
+                                  }
                                 });
                                 setReceiptItems(receiptItems);
                                 setFees(DEFAULT_FEES);
