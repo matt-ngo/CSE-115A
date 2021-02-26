@@ -41,7 +41,7 @@ function Home() {
 
   const [images, setImages] = useState([]);
   const maxNumber = 1;
-  const acceptType = ['jpg', 'gif', 'png'];
+  const acceptType = ['jpg', 'jpeg', 'gif', 'png'];
   const maxFileSize = 1000000000;
 
   const onChange = (imageList, addUpdateIndex) => {
