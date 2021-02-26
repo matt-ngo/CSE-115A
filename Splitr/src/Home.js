@@ -108,7 +108,8 @@ function Home() {
                     )}
                     {errors.maxFileSize && (
                       <Alert severity="error">
-                        Selected file size exceeds the limit of 1 GB
+                        Selected file size exceeds the limit of{' '}
+                        {maxFileSize / 1000000000} GB
                       </Alert>
                     )}
                   </div>
