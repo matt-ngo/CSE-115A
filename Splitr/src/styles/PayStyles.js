@@ -11,15 +11,22 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     textAlign: 'left',
-    color: '#078080',
+    padding: '20px',
+    paddingLeft: '0',
+  },
+  h1: {
+    // fontFamily: '"Baloo Thambi 2", sans-serif',
+    fontWeight: '700',
+    fontSize: '30px',
   },
   backIconButton: {
     marginRight: theme.spacing(3),
-    color: '#078080',
+    color: '#232323',
   },
   paper: {
     width: 'auto',
-    boxShadow: '7px 8px 15px grey',
+    boxShadow: '9px 9px 0px grey',
+    border: '4px solid #232323',
   },
   button: {
     margin: theme.spacing(1),

@@ -297,7 +297,9 @@ function Confirm() {
         >
           <ArrowBackIcon />
         </IconButton>
-        <h1>SPLITR</h1>
+        <Typography variant="h1" className={classes.h1}>
+          SPLITR
+        </Typography>
       </Container>
       <Paper className={classes.paper}>
         <Toolbar>

@@ -113,7 +113,7 @@ function ShareModal({setIsShareModalOpen}) {
   };
 
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper2}>
       <Dialog open={true} onClose={() => setIsShareModalOpen(false)}>
         {<Body />}
       </Dialog>

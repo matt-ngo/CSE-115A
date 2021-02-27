@@ -11,12 +11,21 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     textAlign: 'left',
-    color: '#078080',
+    // color: '#078080',
+    padding: '20px',
+    paddingLeft: '0',
+  },
+  h1: {
+    // fontFamily: '"Baloo Thambi 2", sans-serif',
+    fontWeight: '700',
+    fontSize: '30px',
   },
   paper: {
     width: 'auto',
     boxShadow: '7px 8px 15px grey',
     marginBottom: '1rem',
+    boxShadow: '9px 9px 0px grey',
+    border: '5px solid #232323',
   },
   itemsTable: {
     marginBottom: theme.spacing(2),
@@ -51,11 +60,12 @@ const useStyles = makeStyles((theme) => ({
   },
   backIconButton: {
     marginRight: theme.spacing(3),
-    color: '#078080',
+    // color: '#078080',
+    color: '#232323',
   },
   editIconButton: {
     marginLeft: 'auto',
-    color: '#078080',
+    color: '#074EE8',
   },
   nextButton: {
     margin: '1rem auto',

@@ -7,10 +7,10 @@ const theme = createMuiTheme({
       default: '#f8f5f2',
     },
     text: {
-      primary: '#1c1b1b',
+      primary: '#232323',
     },
     primary: {
-      main: '#078080',
+      main: '#074EE8',
     },
   },
   typography: {
