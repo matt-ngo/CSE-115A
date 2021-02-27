@@ -206,7 +206,11 @@ function ReceiptRow(props) {
           </TableCell>
           <TableCell className={classes.collapsedRow} align="right" colSpan={2}>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <Box marginBottom={2} style={{maxWidth: '120px'}}>
+              <Box
+                marginBottom={2}
+                style={{maxWidth: '120px'}}
+                className={classes.sharedPriceBox}
+              >
                 <Typography variant="body2">
                   {`$${calculatePriceEach(item)} ea.`}
                 </Typography>

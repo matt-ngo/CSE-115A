@@ -125,7 +125,7 @@ function Home() {
                     onClick={onImageUpload}
                     {...dragProps}
                   >
-                    Upload Receipt
+                    Upload a Receipt
                   </Button>
                   <Button
                     variant="contained"
@@ -139,7 +139,7 @@ function Home() {
                       history.push('/confirm');
                     }}
                   >
-                    Manual Input
+                    Input Manually
                   </Button>
                 </div>
                 {imageList.map((image, index) => (

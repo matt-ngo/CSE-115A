@@ -80,7 +80,9 @@ function FeesContent({onFeesChange}) {
           </TableCell>
         </TableRow>
         <TableRow key="misc">
-          <TableCell className={classes.noGridLine}>Misc. Fees</TableCell>
+          <TableCell className={classes.noGridLine}>
+            <Typography variant="body1">Misc. Fees</Typography>
+          </TableCell>
           <TableCell className={classes.noGridLine} align="right">
             {isEditing ? (
               <TextField
@@ -102,9 +104,11 @@ function FeesContent({onFeesChange}) {
           </TableCell>
         </TableRow>
         <TableRow key="total">
-          <TableCell className={classes.noGridLine}>Total</TableCell>
+          <TableCell className={classes.noGridLine}>
+            <Typography variant="body1">Total</Typography>
+          </TableCell>
           <TableCell className={classes.noGridLine} align="right">
-            {`$${fees.total}`}
+            <Typography variant="body1">{`$${fees.total}`}</Typography>
           </TableCell>
         </TableRow>
       </TableBody>

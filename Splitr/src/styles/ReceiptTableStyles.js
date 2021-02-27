@@ -29,6 +29,11 @@ const useStyles = makeStyles((theme) => ({
   },
   sharedBox: {
     paddingLeft: '40%',
+    paddingTop: '5%',
+  },
+  sharedPriceBox: {
+    paddingLeft: '20%',
+    paddingTop: '10%',
   },
   priceField: {
     width: 80,
@@ -67,12 +72,13 @@ const useStyles = makeStyles((theme) => ({
   shareButtons: {
     marginTop: 5,
     marginBottom: 10,
-    // display: 'flex',
-    // alignItems: 'center',
   },
   button: {
-    // marginLeft: '20%',
-    // marginRight: '2%',
+    color: '#074EE8',
+    paddingLeft: '15px',
+    // [theme.breakpoints.down('xs')]: {
+
+    // },
   },
   cell: {
     borderBottom: 'none !important',
