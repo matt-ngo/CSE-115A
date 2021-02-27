@@ -79,7 +79,6 @@ const copyLink = () => {
  * @return {object} JSX
  */
 function ShareModal({setIsShareModalOpen}) {
-  const classes = useStyles();
   const [shareLink, setShareLink] = useState(getShareLink());
 
   useEffect(() => {
@@ -113,7 +112,7 @@ function ShareModal({setIsShareModalOpen}) {
   };
 
   return (
-    <Paper className={classes.paper2}>
+    <Paper>
       <Dialog open={true} onClose={() => setIsShareModalOpen(false)}>
         {<Body />}
       </Dialog>

@@ -25,6 +25,10 @@ const useStyles = makeStyles((theme) => ({
   collapsedRow: {
     paddingBottom: 0,
     paddingTop: 0,
+    padding: 0,
+  },
+  sharedBox: {
+    paddingLeft: '40%',
   },
   priceField: {
     width: 80,
@@ -51,6 +55,8 @@ const useStyles = makeStyles((theme) => ({
   },
   selectBox: {
     width: '50px',
+    paddingRight: '0',
+    paddingLeft: '0',
     [theme.breakpoints.down('xs')]: {
       padding: 5,
     },
@@ -70,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cell: {
     borderBottom: 'none !important',
+    padding: '0',
     [theme.breakpoints.down('xs')]: {
       padding: 5,
     },

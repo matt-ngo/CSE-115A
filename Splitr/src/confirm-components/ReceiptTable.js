@@ -145,7 +145,7 @@ function ReceiptRow(props) {
       <React.Fragment>
         <TableRow className={(classes.row, classes.rowWrappable)}>
           {/* Checkbox */}
-          <TableCell className={classes.selectBox}>
+          <TableCell className={classes.selectBox} align="center">
             <Checkbox
               color="primary"
               checked={item.isSelected}
@@ -174,10 +174,14 @@ function ReceiptRow(props) {
           </TableCell>
         </TableRow>
         <TableRow className={classes.rowWrappable}>
-          <TableCell className={classes.collapsedRow} align="center" />
-          <TableCell className={classes.collapsedRow} align="center">
+          {/* <TableCell className={classes.collapsedRow} align="center" /> */}
+          <TableCell
+            className={classes.collapsedRow}
+            align="center"
+            colSpan={2}
+          >
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <Box>
+              <Box className={classes.sharedBox}>
                 <Typography variant="body2">
                   {`→ Shared ${item.shared} way${item.shared > 1 ? 's' : ''}`}
                 </Typography>
@@ -200,11 +204,7 @@ function ReceiptRow(props) {
               </Box>
             </Collapse>
           </TableCell>
-          <TableCell
-            className={classes.collapsedRow}
-            align="center"
-            colSpan={2}
-          >
+          <TableCell className={classes.collapsedRow} align="right" colSpan={2}>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <Box marginBottom={2} style={{maxWidth: '120px'}}>
                 <Typography variant="body2">

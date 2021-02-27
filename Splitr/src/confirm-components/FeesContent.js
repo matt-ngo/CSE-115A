@@ -19,7 +19,7 @@ function FeesContent({onFeesChange}) {
   const {fees, isEditing} = useContext(SharedContext);
 
   return (
-    <Table size="small">
+    <Table size="small" className={classes.feesContent}>
       <TableBody>
         <TableRow key="tax">
           <TableCell className={classes.noGridLine}>

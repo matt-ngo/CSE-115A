@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
+import LaunchIcon from '@material-ui/icons/Launch';
 
 /**
  *
@@ -38,6 +39,10 @@ function Pay() {
       splitAmount +
       '&note=Requested%20with%20SPLITR',
   );
+  const defaultLink =
+    'venmo://paycharge?audience=friends&recipients=&amount=' +
+    splitAmount +
+    '&note=Sent%20with%20SPLITR';
 
   const [userId, setUserId] = useState('');
 
@@ -87,22 +92,38 @@ function Pay() {
         color="primary"
         size="large"
         className={classes.button}
-        startIcon={<CallMadeIcon />}
+        endIcon={<CallMadeIcon />}
         href={payLink}
         target="_blank"
       >
-        Pay
+        Pay {`$${splitAmount.toFixed(2)}`}
       </Button>
       <Button
         variant="contained"
         color="primary"
         size="large"
         className={classes.button}
-        startIcon={<CallReceivedIcon />}
+        endIcon={<CallReceivedIcon />}
         href={reqLink}
         target="_blank"
       >
-        Request
+        Request {`$${splitAmount.toFixed(2)}`}
+      </Button>
+
+      <Typography variant="subtitle2" className={classes.msg2}>
+        Don&apos;t know their username? Browse your friends in app!
+      </Typography>
+
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        className={classes.openBtn}
+        endIcon={<LaunchIcon />}
+        href={defaultLink}
+        target="_blank"
+      >
+        Open In App
       </Button>
     </div>
   );
@@ -138,6 +159,7 @@ function Pay() {
           SPLITR
         </Typography>
       </Container>
+
       <Paper className={classes.paper}>
         {matches ? desktopContent : mobileContent}
       </Paper>
