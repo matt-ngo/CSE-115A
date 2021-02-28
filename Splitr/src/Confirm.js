@@ -282,8 +282,8 @@ function Confirm() {
       <TableRow>
         <TableCell className={classes.noGridLine} align="center">
           <Typography variant="h6">Your Split:</Typography>
-          <Typography variant="h6">
-            <div>{`$${splitAmount.toFixed(2)}`}</div>
+          <Typography variant="h6" style={{paddingTop: '3%'}}>
+            {`$${splitAmount.toFixed(2)}`}
           </Typography>
         </TableCell>
       </TableRow>
@@ -334,28 +334,30 @@ function Confirm() {
 
         {isEditing ? (
           <Table>
-            <TableRow className={classes.buttonRow}>
-              <TableCell align="center">
-                <Button
-                  className={classes.addButton}
-                  variant="contained"
-                  color="primary"
-                  onClick={handleAddItemClick}
-                >
-                  Add Item +
-                </Button>
-              </TableCell>
-              <TableCell align="center">
-                <Button
-                  className={classes.deleteAllButton}
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleDeleteAllClick}
-                >
-                  Delete All
-                </Button>
-              </TableCell>
-            </TableRow>
+            <TableBody>
+              <TableRow className={classes.buttonRow}>
+                <TableCell align="center">
+                  <Button
+                    className={classes.addButton}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddItemClick}
+                  >
+                    Add Item +
+                  </Button>
+                </TableCell>
+                <TableCell align="center">
+                  <Button
+                    className={classes.deleteAllButton}
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleDeleteAllClick}
+                  >
+                    Delete All
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
           </Table>
         ) : (
           <div />

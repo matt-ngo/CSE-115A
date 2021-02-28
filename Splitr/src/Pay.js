@@ -138,8 +138,8 @@ function Pay() {
       </Typography>
 
       <Typography variant="h6">Your Split:</Typography>
-      <Typography variant="h6">
-        <div>{`$${splitAmount.toFixed(2)}`}</div>
+      <Typography variant="h6" style={{paddingTop: '3%'}}>
+        {`$${splitAmount.toFixed(2)}`}
       </Typography>
     </div>
   );

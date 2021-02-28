@@ -57,7 +57,7 @@ theme.typography.body2 = {
 theme.typography.h6 = {
   fontFamily: ['Fira Code Medium', 'monospace'].join(','),
   fontSize: 22,
-  fontWeight: 600,
+  fontWeight: 500,
   [theme.breakpoints.down('xs')]: {
     fontSize: 18,
   },
