@@ -74,8 +74,15 @@ function FeesContent({onFeesChange}) {
                     </InputAdornment>
                   ),
                 }}
-                onClick={(e) => e.target.setSelectionRange(
-                    0, e.target.value.length)}
+                inputProps={{
+                  name: 'tipPriceInput',
+                }}
+                onClick={(e) => {
+                  if (e.target.name == 'tipPriceInput') {
+                    e.target.setSelectionRange(
+                        0, e.target.value.length);
+                  }
+                }}
                 onChange={(e) => onFeesChange(e, 'tip')}
               />
             ) : fees.tipType == '%' ? (
