@@ -126,6 +126,7 @@ function ReceiptRow(props) {
           <TextField
             className={classes.priceField}
             placeholder="0.00"
+            type="number"
             value={item.price}
             error={!item.isValid}
             helperText={item.isValid ? '' : 'Required'}
