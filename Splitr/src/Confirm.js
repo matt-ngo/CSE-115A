@@ -333,28 +333,30 @@ function Confirm() {
         <ReceiptTable />
 
         {isEditing ? (
-          <TableRow>
-            <TableCell>
-              <Button
-                className={classes.addButton}
-                variant="contained"
-                color="primary"
-                onClick={handleAddItemClick}
-              >
-                Add Item +
-              </Button>
-            </TableCell>
-            <TableCell>
-              <Button
-                className={classes.deleteAllButton}
-                variant="contained"
-                color="secondary"
-                onClick={handleDeleteAllClick}
-              >
-                Delete All
-              </Button>
-            </TableCell>
-          </TableRow>
+          <Table>
+            <TableRow className={classes.buttonRow}>
+              <TableCell align="center">
+                <Button
+                  className={classes.addButton}
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddItemClick}
+                >
+                  Add Item +
+                </Button>
+              </TableCell>
+              <TableCell align="center">
+                <Button
+                  className={classes.deleteAllButton}
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleDeleteAllClick}
+                >
+                  Delete All
+                </Button>
+              </TableCell>
+            </TableRow>
+          </Table>
         ) : (
           <div />
         )}

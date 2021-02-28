@@ -35,12 +35,15 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     fontWeight: 'bold',
   },
+  buttonRow: {
+    width: '100%',
+  },
   addButton: {
-    margin: theme.spacing(1, 3),
+    margin: 'auto',
   },
   deleteAllButton: {
-    margin: theme.spacing(1, 3),
-    // color: '#e36862',
+    margin: 'auto',
+    // margin: theme.spacing(1, 3),
   },
   priceField: {
     width: 80,
