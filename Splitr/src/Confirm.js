@@ -2,7 +2,6 @@ import React, {useEffect, useContext, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -16,7 +15,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import ShareIcon from '@material-ui/icons/Share';
 import SharedContext from './SharedContext';
 import ReceiptTable from './confirm-components/ReceiptTable';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 import {DEFAULT_ITEM, DEFAULT_ITEMS, DEFAULT_FEES} from './DefaultValues';
 import {Link} from 'react-router-dom';
 import useStyles from './styles/ConfirmStyles';
@@ -126,6 +125,7 @@ function Confirm() {
   const history = useHistory();
 
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  // const [slide, setSlide] = React.useState(false);
 
   const {
     fees,
@@ -293,26 +293,34 @@ function Confirm() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Container className={classes.brandHeader} maxWidth="md">
+
+      <Toolbar className={classes.brandHeader}>
         <IconButton
           className={classes.backIconButton}
           edge="start"
           onClick={onBackButtonClick}
         >
-          <ArrowBackIcon />
+          <ArrowBackRoundedIcon />
         </IconButton>
-        <h1>SPLITR</h1>
-      </Container>
+        <Typography variant="h1" className={classes.h1}>
+          SPLITR
+        </Typography>
+        {!isEditing && (
+          <IconButton
+            className={classes.shareIconButton}
+            edge="end"
+            onClick={() => setIsShareModalOpen(true)}
+          >
+            <ShareIcon />
+          </IconButton>
+        )}
+      </Toolbar>
+
       <Paper className={classes.paper}>
         <Toolbar>
           <Typography variant="h6">
             {isEditing ? 'Edit Receipt' : 'Select Items'}
           </Typography>
-          {!isEditing && (
-            <IconButton onClick={() => setIsShareModalOpen(true)}>
-              <ShareIcon />
-            </IconButton>
-          )}
           <IconButton
             className={classes.editIconButton}
             edge="end"

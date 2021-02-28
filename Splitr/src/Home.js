@@ -3,7 +3,7 @@ import {useHistory} from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
-// import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography';
 import {Alert} from '@material-ui/lab';
 import Button from '@material-ui/core/Button';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
@@ -70,7 +70,9 @@ function Home() {
     <div className={classes.root}>
       <CssBaseline />
       <Container className={classes.brandHeader} maxWidth="md">
-        <h1>SPLITR</h1>
+        <Typography variant="h1" className={classes.h1}>
+          SPLITR
+        </Typography>
       </Container>
       <Paper className={classes.paper}>
         <Container maxWidth="md">
@@ -123,7 +125,7 @@ function Home() {
                     onClick={onImageUpload}
                     {...dragProps}
                   >
-                    Upload Receipt
+                    Upload a Receipt
                   </Button>
                   <Button
                     variant="contained"
@@ -137,7 +139,7 @@ function Home() {
                       history.push('/confirm');
                     }}
                   >
-                    Manual Input
+                    Input Manually
                   </Button>
                 </div>
                 {imageList.map((image, index) => (

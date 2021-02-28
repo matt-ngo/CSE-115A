@@ -4,10 +4,10 @@ import {createMuiTheme} from '@material-ui/core/styles';
 const theme = createMuiTheme({
   palette: {
     background: {
-      default: '#f0efe7',
+      default: '#f8f5f2',
     },
     text: {
-      primary: '#1c1b1b',
+      primary: '#232323',
     },
     primary: {
       main: '#074EE8',
@@ -45,9 +45,18 @@ theme.typography.body1 = {
 
 theme.typography.body2 = {
   fontFamily: ['Fira Code Medium', 'monospace'].join(','),
-  fontSize: 14,
+  fontSize: 12,
   [theme.breakpoints.down('xs')]: {
-    fontSize: 12,
+    fontSize: 11,
+  },
+};
+
+theme.typography.h6 = {
+  fontFamily: ['Fira Code Medium', 'monospace'].join(','),
+  fontSize: 22,
+  fontWeight: 600,
+  [theme.breakpoints.down('xs')]: {
+    fontSize: 18,
   },
 };
 

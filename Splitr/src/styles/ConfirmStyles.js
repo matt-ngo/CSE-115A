@@ -8,15 +8,23 @@ const useStyles = makeStyles((theme) => ({
     padding: '20px',
   },
   brandHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    textAlign: 'left',
     color: '#074EE8',
+    padding: '20px',
+    paddingLeft: '0',
+  },
+  h1: {
+    fontFamily: '"Pacifico", sans-serif',
+    textTransform: 'lowercase',
+    fontSize: '40px',
+    flexGrow: 1,
   },
   paper: {
     width: 'auto',
-    boxShadow: '7px 8px 15px grey',
+    // boxShadow: '0px 10px 20px grey',
     marginBottom: '1rem',
+    boxShadow: '9px 9px 0px grey',
+    border: '5px solid #232323',
+    borderRadius: '10px',
   },
   itemsTable: {
     marginBottom: theme.spacing(2),
@@ -28,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
   },
   addButton: {
-    margin: theme.spacing(3, 3),
+    margin: theme.spacing(1, 3),
   },
   priceField: {
     width: 80,
@@ -51,7 +59,14 @@ const useStyles = makeStyles((theme) => ({
   },
   backIconButton: {
     marginRight: theme.spacing(3),
-    color: '#074EE8',
+    color: '#232323',
+    // color: '#074EE8',
+    transform: 'scale(1.2)',
+  },
+  shareIconButton: {
+    // marginRight: '24px',
+    color: '#232323',
+    // transform: 'scale(1.2)',
   },
   editIconButton: {
     marginLeft: 'auto',
@@ -61,8 +76,7 @@ const useStyles = makeStyles((theme) => ({
     margin: '1rem auto',
   },
   totalFooter: {
-    paddingTop: '15px',
-    paddingBottom: '20px',
+    margin: '20px',
   },
   dotted: {
     margin: 'auto',
