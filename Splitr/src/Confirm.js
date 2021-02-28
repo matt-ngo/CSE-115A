@@ -218,6 +218,10 @@ function Confirm() {
     setReceiptItems([...receiptItems, {...DEFAULT_ITEM}]);
   };
 
+  const handleDeleteAllClick = () => {
+    setReceiptItems([]);
+  };
+
   const formatPrice = (price) => {
     let newPrice = price === '.' ? '' : price;
     if (newPrice) {
@@ -321,14 +325,28 @@ function Confirm() {
         <ReceiptTable />
 
         {isEditing ? (
-          <Button
-            className={classes.addButton}
-            variant="contained"
-            color="primary"
-            onClick={handleAddItemClick}
-          >
-            Add Item +
-          </Button>
+          <TableRow>
+            <TableCell>
+              <Button
+                className={classes.addButton}
+                variant="contained"
+                color="primary"
+                onClick={handleAddItemClick}
+              >
+                Add Item +
+              </Button>
+            </TableCell>
+            <TableCell>
+              <Button
+                className={classes.addButton}
+                variant="contained"
+                color="#e36862"
+                onClick={handleDeleteAllClick}
+              >
+                Delete All
+              </Button>
+            </TableCell>
+          </TableRow>
         ) : (
           <div />
         )}
