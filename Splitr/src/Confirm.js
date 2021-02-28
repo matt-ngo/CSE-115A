@@ -346,9 +346,9 @@ function Confirm() {
             </TableCell>
             <TableCell>
               <Button
-                className={classes.addButton}
+                className={classes.deleteAllButton}
                 variant="contained"
-                color="#e36862"
+                color="secondary"
                 onClick={handleDeleteAllClick}
               >
                 Delete All

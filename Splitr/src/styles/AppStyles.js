@@ -12,6 +12,9 @@ const theme = createMuiTheme({
     primary: {
       main: '#074EE8',
     },
+    secondary: {
+      main: '#e16162',
+    },
   },
   typography: {
     fontFamily: ['Fira Code Medium', 'monospace'].join(','),

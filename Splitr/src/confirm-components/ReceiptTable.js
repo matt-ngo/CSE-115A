@@ -89,19 +89,27 @@ function ReceiptRow(props) {
     return (
       <TableRow
         style={
-          !item.isValid ? {borderStyle: 'dashed', borderColor: 'red'} : {}
+          !item.isValid ?
+            {
+              borderStyle: 'dashed',
+              borderColor: '#e36862',
+              boxSizing: 'border-box',
+            } :
+            {}
         }
       >
         {/* Checkbox */}
         <TableCell className={classes.selectBox}>
-          <Checkbox
-            color="primary"
-            checked={item.isSelected}
-            onClick={() => onSelectItem(idx)}
-          />
+          {isEditing ? null : (
+            <Checkbox
+              color="primary"
+              checked={item.isSelected}
+              onClick={() => onSelectItem(idx)}
+            />
+          )}
         </TableCell>
         {/* Input box */}
-        <TableCell className={classes.cell} style={{width: '100%'}}>
+        <TableCell className={classes.cell}>
           <TextField
             placeholder="eg. Cupcakes"
             value={item.name.toUpperCase()}
@@ -120,7 +128,7 @@ function ReceiptRow(props) {
             placeholder="0.00"
             value={item.price}
             error={!item.isValid}
-            helperText={item.isValid ? '' : 'Price is required'}
+            helperText={item.isValid ? '' : 'Required'}
             InputProps={{
               classes: {
                 input: classes.priceTextField,
@@ -133,9 +141,9 @@ function ReceiptRow(props) {
           />
         </TableCell>
         {/* Delete Icon */}
-        <TableCell className={classes.cell}>
+        <TableCell className={classes.iconCell} align="center">
           <IconButton size="small" onClick={() => handleRemoveItemClick(idx)}>
-            <HighlightOffIcon style={{color: '#e36862'}} />
+            <HighlightOffIcon className={classes.deleteIcon} />
           </IconButton>
         </TableCell>
       </TableRow>
@@ -145,7 +153,7 @@ function ReceiptRow(props) {
       <React.Fragment>
         <TableRow className={(classes.row, classes.rowWrappable)}>
           {/* Checkbox */}
-          <TableCell className={classes.selectBox} align="center">
+          <TableCell className={classes.iconCell} align="center">
             <Checkbox
               color="primary"
               checked={item.isSelected}
@@ -167,7 +175,7 @@ function ReceiptRow(props) {
             <Typography variant="body1">${item.price}</Typography>
           </TableCell>
           {/* Dropdown Arrow */}
-          <TableCell align="right" className={classes.cell}>
+          <TableCell align="right" className={classes.iconCell}>
             <IconButton size="small" onClick={() => setExpanded(!expanded)}>
               {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>

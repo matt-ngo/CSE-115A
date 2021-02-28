@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
   addButton: {
     margin: theme.spacing(1, 3),
   },
+  deleteAllButton: {
+    margin: theme.spacing(1, 3),
+    // color: '#e36862',
+  },
   priceField: {
     width: 80,
   },

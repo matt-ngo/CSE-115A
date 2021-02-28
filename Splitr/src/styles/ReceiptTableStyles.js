@@ -18,6 +18,8 @@ const useStyles = makeStyles((theme) => ({
   },
   tableHeader: {
     fontWeight: 'bold',
+    paddingLeft: 5,
+    paddingRight: 2,
     [theme.breakpoints.down('xs')]: {
       padding: 5,
     },
@@ -58,8 +60,8 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     marginLeft: theme.spacing(3),
   },
-  selectBox: {
-    width: '50px',
+  iconCell: {
+    width: '70px',
     paddingRight: '0',
     paddingLeft: '0',
     [theme.breakpoints.down('xs')]: {
@@ -82,11 +84,15 @@ const useStyles = makeStyles((theme) => ({
   },
   cell: {
     borderBottom: 'none !important',
-    padding: '0',
+    paddingLeft: 5,
+    paddingRight: 2,
     [theme.breakpoints.down('xs')]: {
       padding: 5,
     },
-    width: '50px',
+  },
+  deleteIcon: {
+    color: '#e36862',
+    // paddingLeft: '16px',
   },
 }));
 
