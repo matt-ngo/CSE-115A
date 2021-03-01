@@ -29,6 +29,7 @@ function FeesContent({onFeesChange}) {
             {isEditing ? (
               <TextField
                 className={classes.priceFeeField}
+                type="number"
                 placeholder="0.00"
                 value={fees.tax}
                 InputProps={{
@@ -56,6 +57,7 @@ function FeesContent({onFeesChange}) {
             {isEditing ? (
               <TextField
                 className={classes.priceTipField}
+                type="number"
                 placeholder="0.00"
                 value={fees.tip}
                 InputProps={{
@@ -100,6 +102,7 @@ function FeesContent({onFeesChange}) {
             {isEditing ? (
               <TextField
                 className={classes.priceFeeField}
+                type="number"
                 placeholder="0.00"
                 value={fees.misc}
                 InputProps={{
