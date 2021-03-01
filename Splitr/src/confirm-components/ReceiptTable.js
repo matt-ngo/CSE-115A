@@ -138,8 +138,7 @@ function ReceiptRow(props) {
                 <InputAdornment position="start">$</InputAdornment>
               ),
             }}
-            onClick={(e) => e.target.setSelectionRange(
-                0, e.target.value.length)}
+            onClick={(e) => e.target.select()}
             onChange={(e) => onPriceChange(e, idx)}
           />
         </TableCell>

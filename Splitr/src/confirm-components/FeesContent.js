@@ -40,8 +40,7 @@ function FeesContent({onFeesChange}) {
                     <InputAdornment position="start">$</InputAdornment>
                   ),
                 }}
-                onClick={(e) => e.target.setSelectionRange(
-                    0, e.target.value.length)}
+                onClick={(e) => e.target.select()}
                 onChange={(e) => onFeesChange(e, 'tax')}
               />
             ) : (
@@ -81,8 +80,7 @@ function FeesContent({onFeesChange}) {
                 }}
                 onClick={(e) => {
                   if (e.target.name == 'tipPriceInput') {
-                    e.target.setSelectionRange(
-                        0, e.target.value.length);
+                    e.target.select();
                   }
                 }}
                 onChange={(e) => onFeesChange(e, 'tip')}
@@ -113,8 +111,7 @@ function FeesContent({onFeesChange}) {
                     <InputAdornment position="start">$</InputAdornment>
                   ),
                 }}
-                onClick={(e) => e.target.setSelectionRange(
-                    0, e.target.value.length)}
+                onClick={(e) => e.target.select()}
                 onChange={(e) => onFeesChange(e, 'misc')}
               />
             ) : (
