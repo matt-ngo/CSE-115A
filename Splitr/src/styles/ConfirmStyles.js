@@ -59,10 +59,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   priceFeeField: {
-    width: 100,
-  },
-  priceTipField: {
-    width: 106,
+    width: 110,
   },
   backIconButton: {
     marginRight: theme.spacing(3),
