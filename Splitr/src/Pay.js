@@ -1,20 +1,20 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 import {useTheme} from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import IconButton from '@material-ui/core/IconButton';
+import LaunchIcon from '@material-ui/icons/Launch';
 import Paper from '@material-ui/core/Paper';
 import SharedContext from './SharedContext';
-import useStyles from './styles/PayStyles';
 import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
-import LaunchIcon from '@material-ui/icons/Launch';
+import useStyles from './styles/PayStyles';
 
 const userRe = /^([a-zA-Z][a-zA-Z0-9\_\-]*)+$/g;
 

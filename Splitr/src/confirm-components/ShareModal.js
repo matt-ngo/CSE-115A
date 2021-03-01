@@ -1,10 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import propTypes from 'prop-types';
-import {Button, Dialog} from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
-import SharedContext from '../SharedContext';
-import useStyles from '../styles/ConfirmStyles';
 import axios from 'axios';
+import propTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import Paper from '@material-ui/core/Paper';
+import useStyles from '../styles/ConfirmStyles';
+import SharedContext from '../SharedContext';
 
 const getTinyURL = async (url, setShareLink) => {
   const config = {

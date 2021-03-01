@@ -1,9 +1,9 @@
 import React from 'react';
-import AppRouter from './AppRouter';
-import SharedContext from './SharedContext';
 import {ThemeProvider} from '@material-ui/core/styles';
-import {DEFAULT_ITEMS, DEFAULT_FEES} from './DefaultValues';
 import theme from './styles/AppStyles';
+import AppRouter from './AppRouter';
+import {DEFAULT_ITEMS, DEFAULT_FEES} from './DefaultValues';
+import SharedContext from './SharedContext';
 
 /**
  *

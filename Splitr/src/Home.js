@@ -1,19 +1,19 @@
 import React, {useState, useContext} from 'react';
+import axios from 'axios';
 import {useHistory} from 'react-router-dom';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import {Alert} from '@material-ui/lab';
+import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined';
 import Button from '@material-ui/core/Button';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
-import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import SharedContext from './SharedContext';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import ImageUploading from 'react-images-uploading';
-import axios from 'axios';
-import {DEFAULT_FEES, DEFAULT_ITEM} from './DefaultValues';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Paper from '@material-ui/core/Paper';
+import SharedContext from './SharedContext';
+import Typography from '@material-ui/core/Typography';
 import useStyles from './styles/HomeStyles';
+import {DEFAULT_FEES, DEFAULT_ITEM} from './DefaultValues';
 
 /**
  * Converts dataURL to Blob

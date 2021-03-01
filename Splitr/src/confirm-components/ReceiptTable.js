@@ -1,9 +1,15 @@
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
+import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import Box from '@material-ui/core/Box';
+import Checkbox from '@material-ui/core/Checkbox';
 import Collapse from '@material-ui/core/Collapse';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import RemoveCircleRoundedIcon from '@material-ui/icons/RemoveCircleRounded';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,15 +17,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
-import RemoveCircleRoundedIcon from '@material-ui/icons/RemoveCircleRounded';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import Checkbox from '@material-ui/core/Checkbox';
+import useStyles from '../styles/ReceiptTableStyles';
 import SharedContext from '../SharedContext';
 import {isValidPrice} from '../Confirm';
-import useStyles from '../styles/ReceiptTableStyles';
 
 const calculatePriceEach = (item) => {
   return round(parseFloat(item.price) / item.shared).toFixed(2);
