@@ -127,6 +127,7 @@ function ReceiptRow(props) {
             className={classes.priceField}
             placeholder="0.00"
             type="number"
+            inputProps={{inputMode: 'decimal'}}
             value={item.price}
             error={!item.isValid}
             helperText={item.isValid ? '' : 'Required'}
