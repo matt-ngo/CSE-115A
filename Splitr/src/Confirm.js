@@ -1,27 +1,26 @@
 import React, {useEffect, useContext, useState} from 'react';
-import {useHistory} from 'react-router-dom';
+import {useHistory, Link} from 'react-router-dom';
+import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
+import SaveIcon from '@material-ui/icons/Save';
+import ShareIcon from '@material-ui/icons/Share';
+import SharedContext from './SharedContext';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Save';
-import ShareIcon from '@material-ui/icons/Share';
-import SharedContext from './SharedContext';
-import ReceiptTable from './confirm-components/ReceiptTable';
-import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
-import {DEFAULT_ITEM, DEFAULT_ITEMS, DEFAULT_FEES} from './DefaultValues';
-import {Link} from 'react-router-dom';
-import useStyles from './styles/ConfirmStyles';
-import ShareModal from './confirm-components/ShareModal';
-import queryString from 'query-string';
 import FeesContent from './confirm-components/FeesContent';
+import ReceiptTable from './confirm-components/ReceiptTable';
+import ShareModal from './confirm-components/ShareModal';
+import useStyles from './styles/ConfirmStyles';
+import queryString from 'query-string';
+import {DEFAULT_ITEM, DEFAULT_ITEMS, DEFAULT_FEES} from './DefaultValues';
 
 export const isValidPrice = (stringToTest) => {
   return /^\d*\.{0,1}\d{0,2}$/.test(stringToTest);

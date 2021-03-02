@@ -1,20 +1,22 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 import {useTheme} from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import IconButton from '@material-ui/core/IconButton';
+import LaunchIcon from '@material-ui/icons/Launch';
 import Paper from '@material-ui/core/Paper';
 import SharedContext from './SharedContext';
-import useStyles from './styles/PayStyles';
 import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
-import LaunchIcon from '@material-ui/icons/Launch';
+import useStyles from './styles/PayStyles';
+
+const userRe = /^([a-zA-Z][a-zA-Z0-9\_\-]*)+$/g;
 
 /**
  *
@@ -45,6 +47,9 @@ function Pay() {
     '&note=Sent%20with%20SPLITR';
 
   const [userId, setUserId] = useState('');
+  const [isUserValid, setIsUserValid] = useState(true);
+
+  const userRegex = new RegExp(userRe); // reg exp for username field
 
   const handleInput = () => {
     setPayLink(
@@ -63,6 +68,15 @@ function Pay() {
     );
   };
 
+  const onUserFieldChange = (event) => {
+    if (userRegex.test(event.target.value)) {
+      setIsUserValid(true);
+    } else {
+      setIsUserValid(false);
+    }
+    setUserId(event.target.value);
+  };
+
   useEffect(() => {
     handleInput();
   }, [userId]);
@@ -74,18 +88,23 @@ function Pay() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
 
+  const defaultUserText = '@username or phone number :)';
+  const errorUserText = 'Usernames must start with ' +
+                        'letters and contain only letters, ' +
+                        'numbers, hyphens(-), and underscores(_).' +
+                        'It must be between 5-30 characters long.';
+
   const mobileContent = (
     <div className={classes.buttonContainer}>
       <TextField
         id="outlined"
         label="User"
-        helperText="@username or phone number :)"
+        helperText={isUserValid ? defaultUserText : errorUserText}
         variant="outlined"
         className={classes.input}
-        onChange={(event) => {
-          setUserId(event.target.value);
-        }}
+        onChange={onUserFieldChange}
         value={userId}
+        error={isUserValid ? false : true}
       />
       <Button
         variant="contained"
@@ -95,6 +114,7 @@ function Pay() {
         endIcon={<CallMadeIcon />}
         href={payLink}
         target="_blank"
+        disabled={isUserValid ? false : true}
       >
         Pay {`$${splitAmount.toFixed(2)}`}
       </Button>
@@ -106,6 +126,7 @@ function Pay() {
         endIcon={<CallReceivedIcon />}
         href={reqLink}
         target="_blank"
+        disabled={isUserValid ? false : true}
       >
         Request {`$${splitAmount.toFixed(2)}`}
       </Button>
