@@ -30,6 +30,7 @@ function FeesContent({onFeesChange}) {
               <TextField
                 className={classes.priceFeeField}
                 type="number"
+                inputProps={{inputMode: 'decimal'}}
                 placeholder="0.00"
                 value={fees.tax}
                 InputProps={{
@@ -77,6 +78,7 @@ function FeesContent({onFeesChange}) {
                 }}
                 inputProps={{
                   name: 'tipPriceInput',
+                  inputMode: 'decimal',
                 }}
                 onClick={(e) => {
                   if (e.target.name == 'tipPriceInput') {
@@ -101,6 +103,7 @@ function FeesContent({onFeesChange}) {
               <TextField
                 className={classes.priceFeeField}
                 type="number"
+                inputProps={{inputMode: 'decimal'}}
                 placeholder="0.00"
                 value={fees.misc}
                 InputProps={{
