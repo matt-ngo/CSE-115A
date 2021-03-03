@@ -126,7 +126,7 @@ function ReceiptRow(props) {
           <TextField
             className={classes.priceField}
             placeholder="0.00"
-            type="number"
+            // type="number"
             inputProps={{inputMode: 'decimal'}}
             value={item.price}
             error={!item.isValid}
