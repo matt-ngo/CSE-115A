@@ -13,17 +13,24 @@ import ImageUploading from 'react-images-uploading';
 import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined';
 import ArrowForwardOutlinedIcon from '@material-ui/icons/ArrowForwardOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
+<<<<<<< HEAD
 >>>>>>> 4b8002c (SPLIT-90 - Adds HEIC support)
+=======
+>>>>>>> 4b8002c3dfd2f409f97c0d3a826020b094950677
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import SharedContext from './SharedContext';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './styles/HomeStyles';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import {DEFAULT_FEES, DEFAULT_ITEM} from './DefaultValues';
 =======
 import heic2any from 'heic2any';
 >>>>>>> 4b8002c (SPLIT-90 - Adds HEIC support)
+=======
+import heic2any from 'heic2any';
+>>>>>>> 4b8002c3dfd2f409f97c0d3a826020b094950677
 
 /**
  * Converts dataURL to Blob
@@ -196,6 +203,7 @@ function Home() {
                     color="primary"
                     className={classes.button}
 <<<<<<< HEAD
+<<<<<<< HEAD
                     startIcon={<CameraAltOutlinedIcon />}
                     onClick={onImageUpload}
                     {...dragProps}
@@ -208,6 +216,8 @@ function Home() {
                     className={classes.button}
 =======
 >>>>>>> 4b8002c (SPLIT-90 - Adds HEIC support)
+=======
+>>>>>>> 4b8002c3dfd2f409f97c0d3a826020b094950677
                     startIcon={<BorderColorOutlinedIcon />}
                     onClick={() => {
                       setReceiptItems([]);
