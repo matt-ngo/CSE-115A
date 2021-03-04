@@ -5,15 +5,25 @@ import {Alert} from '@material-ui/lab';
 import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined';
 import Button from '@material-ui/core/Button';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
+<<<<<<< HEAD
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import ImageUploading from 'react-images-uploading';
+=======
+import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined';
+import ArrowForwardOutlinedIcon from '@material-ui/icons/ArrowForwardOutlined';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
+>>>>>>> 4b8002c (SPLIT-90 - Adds HEIC support)
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import SharedContext from './SharedContext';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './styles/HomeStyles';
+<<<<<<< HEAD
 import {DEFAULT_FEES, DEFAULT_ITEM} from './DefaultValues';
+=======
+import heic2any from 'heic2any';
+>>>>>>> 4b8002c (SPLIT-90 - Adds HEIC support)
 
 /**
  * Converts dataURL to Blob
@@ -32,6 +42,61 @@ function dataURLtoBlob(dataurl) {
   return new Blob([u8arr], {type: mime});
 }
 
+const isValidItem = (itemName) => {
+  const str = itemName.toLowerCase().replace(/[т]/g, (c) => 't');
+  if (
+    str.includes('total') ||
+    str.includes('tax') ||
+    str.includes('gratuity')
+  ) {
+    return false;
+  }
+  return true;
+};
+
+const makeAPICall = (setLoading, image, setReceiptItems, setFees, history) => {
+  setLoading(true);
+
+  const blob =
+    image.blob === undefined ? dataURLtoBlob(image.data_url) : image.blob;
+  const formData = new FormData();
+  formData.append('imageFile', blob);
+  const config = {
+    headers: {
+      'apiKey': process.env.REACT_APP_API_KEY,
+      'content-type': 'multipart/form-data',
+    },
+  };
+  axios
+      .post(
+          'https://api-na-us1-premium.cloudmersive.com' +
+        '/ocr/photo/recognize/receipt',
+          formData,
+          config,
+      )
+      .then((response) => {
+        console.log('Success!');
+        console.log(response);
+        const receiptItems = [];
+        response.data.ReceiptItems.forEach((item) => {
+          if (isValidItem(item.ItemDescription)) {
+            receiptItems.push({
+              ...DEFAULT_ITEM,
+              name: item.ItemDescription,
+              price: item.ItemPrice !== null ? item.ItemPrice.toString() : '0',
+            });
+          }
+        });
+        setReceiptItems(receiptItems);
+        setFees(DEFAULT_FEES);
+        history.push('/confirm');
+      })
+      .catch((error) => {
+        console.log('Error!');
+        console.log(error);
+      });
+};
+
 /**
  *
  * @return {object} JSX
@@ -41,29 +106,40 @@ function Home() {
 
   const [images, setImages] = useState([]);
   const maxNumber = 1;
-  const acceptType = ['jpg', 'jpeg', 'gif', 'png'];
+  const acceptType = ['gif', 'heic', 'png', 'jpg', 'jpeg'];
   const maxFileSize = 1000000000;
 
-  const onChange = (imageList, addUpdateIndex) => {
-    console.log(imageList, addUpdateIndex);
-    setImages(imageList);
-  };
-
-  const isValidItem = (itemName) => {
-    const str = itemName.toLowerCase().replace(/[т]/g, (c) => 't');
-    if (
-      str.includes('total') ||
-      str.includes('tax') ||
-      str.includes('gratuity')
-    ) {
-      return false;
-    }
-    return true;
-  };
-
+  const [uploading, setUploading] = useState(false);
+  const [deleteVisible, setDeleteVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {setReceiptItems, setFees, setIsEditing} = useContext(SharedContext);
 
+  const onChange = (imageList, addUpdateIndex) => {
+    // Prevents trigger on delete
+    if (imageList.length == 1) {
+      setUploading(true);
+      if (imageList[0].file.type == 'image/heic') {
+        heic2any({
+          blob: dataURLtoBlob(imageList[0].data_url),
+          toType: 'image/jpeg',
+        }).then((conversionResult) => {
+          imageList[0].data_url = URL.createObjectURL(conversionResult);
+          imageList[0].blob = conversionResult;
+          setImages(imageList);
+          setUploading(false);
+          setDeleteVisible(true);
+        });
+      } else {
+        setImages(imageList);
+        setUploading(false);
+        setDeleteVisible(true);
+      }
+    } else {
+      // Triggers on delete
+      setImages(imageList);
+    }
+  };
+
+  const {setReceiptItems, setFees, setIsEditing} = useContext(SharedContext);
   const history = useHistory();
 
   return (
@@ -87,9 +163,7 @@ function Home() {
             {({
               imageList,
               onImageUpload,
-              onImageUpdate,
-              onImageRemove,
-              isDragging,
+              onImageRemoveAll,
               dragProps,
               errors,
             }) => (
@@ -121,6 +195,7 @@ function Home() {
                     variant="contained"
                     color="primary"
                     className={classes.button}
+<<<<<<< HEAD
                     startIcon={<CameraAltOutlinedIcon />}
                     onClick={onImageUpload}
                     {...dragProps}
@@ -131,6 +206,8 @@ function Home() {
                     variant="contained"
                     color="primary"
                     className={classes.button}
+=======
+>>>>>>> 4b8002c (SPLIT-90 - Adds HEIC support)
                     startIcon={<BorderColorOutlinedIcon />}
                     onClick={() => {
                       setReceiptItems([]);
@@ -141,6 +218,33 @@ function Home() {
                   >
                     Input Manually
                   </Button>
+                  {!deleteVisible && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      startIcon={<CameraAltOutlinedIcon />}
+                      onClick={onImageUpload}
+                      {...dragProps}
+                    >
+                      Upload Receipt
+                    </Button>
+                  )}
+                  {deleteVisible && (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className={classes.button}
+                      startIcon={<DeleteOutlinedIcon />}
+                      onClick={() => {
+                        onImageRemoveAll();
+                        setDeleteVisible(false);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                  {uploading && <LinearProgress />}
                 </div>
                 {imageList.map((image, index) => (
                   <div key={index} className="imageitem">
@@ -159,49 +263,15 @@ function Home() {
                         variant="contained"
                         color="primary"
                         className={classes.button}
+                        startIcon={<ArrowForwardOutlinedIcon />}
                         onClick={() => {
-                          setLoading(true);
-
-                          const blob = dataURLtoBlob(image.data_url);
-                          const formData = new FormData();
-                          formData.append('imageFile', blob);
-                          const config = {
-                            headers: {
-                              'apiKey': process.env.REACT_APP_API_KEY,
-                              'content-type': 'multipart/form-data',
-                            },
-                          };
-                          axios
-                              .post(
-                                  'https://api-na-us1-premium.cloudmersive.com' +
-                                '/ocr/photo/recognize/receipt',
-                                  formData,
-                                  config,
-                              )
-                              .then((response) => {
-                                console.log('Success!');
-                                console.log(response);
-                                const receiptItems = [];
-                                response.data.ReceiptItems.forEach((item) => {
-                                  if (isValidItem(item.ItemDescription)) {
-                                    receiptItems.push({
-                                      ...DEFAULT_ITEM,
-                                      name: item.ItemDescription,
-                                      price:
-                                      item.ItemPrice !== null ?
-                                        item.ItemPrice.toString() :
-                                        '0',
-                                    });
-                                  }
-                                });
-                                setReceiptItems(receiptItems);
-                                setFees(DEFAULT_FEES);
-                                history.push('/confirm');
-                              })
-                              .catch((error) => {
-                                console.log('Error!');
-                                console.log(error);
-                              });
+                          makeAPICall(
+                              setLoading,
+                              image,
+                              setReceiptItems,
+                              setFees,
+                              history,
+                          );
                         }}
                         disabled={loading}
                       >
