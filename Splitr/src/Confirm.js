@@ -63,6 +63,7 @@ const generateItemsArrayFromQueryStringData = (queries) => {
       break;
     }
   }
+  return newItems;
 };
 
 const getItemsFromQueryString = () => {
@@ -145,6 +146,11 @@ function Confirm() {
     splitAmount,
   } = useContext(SharedContext);
 
+  // Format prices (OCR input)
+  useEffect(() => {
+    formatItemPricesAndReturnSafeToSave();
+  }, []);
+
   // Populates field with data based on query string
   useEffect(() => {
     setReceiptItems((prev) => {
@@ -162,11 +168,6 @@ function Confirm() {
       }
       return prev;
     });
-  }, []);
-
-  // Format prices (OCR input)
-  useEffect(() => {
-    formatItemPricesAndReturnSafeToSave();
   }, []);
 
   // Updates totals when items are edited
@@ -283,6 +284,8 @@ function Confirm() {
       if (canSave) {
         setIsEditing(false);
       }
+    } else {
+      setIsEditing(true);
     }
   };
 
