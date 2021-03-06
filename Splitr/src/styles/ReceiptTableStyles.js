@@ -94,6 +94,12 @@ const useStyles = makeStyles((theme) => ({
     color: '#e36862',
     // paddingLeft: '16px',
   },
+  invalidItemBoxOutline: {
+    // borderStyle: 'dashed',
+    // borderColor: '#e36862',
+    // boxSizing: 'border-box',
+    boxShadow: 'inset 0 0 0 2px #e36862',
+  },
 }));
 
 export default useStyles;

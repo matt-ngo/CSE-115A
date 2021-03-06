@@ -80,11 +80,21 @@ const getFeesFromQueryString = () => {
 
   const tax = queries['tax'];
   const tip = queries['tip'];
-  const tipType = queries['tip_type'];
   const misc = queries['misc_fees'];
+  const taxType = queries['tax_type'];
+  const tipType = queries['tip_type'];
+  const miscType = queries['misc_type'];
 
-  if (tax && tip && tipType && misc) {
-    return {...DEFAULT_FEES, tax, tip, tipType, misc};
+  if (tax && tip && misc && taxType && tipType && miscType) {
+    return {
+      ...DEFAULT_FEES,
+      taxField: tax,
+      tipField: tip,
+      miscField: misc,
+      taxType,
+      tipType,
+      miscType,
+    };
   }
   return null;
 };
@@ -101,6 +111,9 @@ const round = (num) => {
 };
 
 const formatPrice = (price) => {
+  if (price == '') {
+    return '';
+  }
   return round(parsePriceToFloat(price)).toFixed(2);
 };
 
@@ -165,27 +178,21 @@ function Confirm() {
 
   // Populates field with data based on query string
   useEffect(() => {
-    setReceiptItems((prev) => {
-      const newItems = getItemsFromQueryString();
-      if (newItems) {
-        return newItems;
-      }
-      return prev;
-    });
-
-    setFees((prev) => {
-      const newFees = getFeesFromQueryString();
+    const newItems = getItemsFromQueryString();
+    if (newItems) {
+      let newFees = getFeesFromQueryString();
       if (newFees) {
-        return newFees;
+        newFees = calculateNewFees(newItems, newFees);
+        setFees(newFees);
       }
-      return prev;
-    });
+      setReceiptItems(newItems);
+    }
   }, []);
 
   // Updates totals when items are edited
   useEffect(() => {
     setFees((prev) => {
-      const newFees = calculateNewFees(receiptItems, fees);
+      const newFees = calculateNewFees(receiptItems, prev);
       return newFees === null ? prev : newFees;
     });
 
