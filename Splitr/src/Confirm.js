@@ -34,14 +34,16 @@ const calculateTip = (subtotal, tipValue, tipType) => {
   }
 };
 
-const getItemsFromQueryString = () => {
-  const newItems = [];
+const getQueryStringParameters = () => {
   const query = window.location.search;
   if (!query) {
     return null;
   }
-  const queries = queryString.parse(query);
+  return queryString.parse(query);
+};
 
+const generateItemsArrayFromQueryStringData = (queries) => {
+  const newItems = [];
   let i = 0;
   while (true) {
     const item = queries[`item${i}`];
@@ -61,7 +63,16 @@ const getItemsFromQueryString = () => {
       break;
     }
   }
+  return newItems;
+};
 
+const getItemsFromQueryString = () => {
+  const queries = getQueryStringParameters();
+  if (!queries) {
+    return null;
+  }
+
+  const newItems = generateItemsArrayFromQueryStringData(queries);
   if (newItems.length === 0) {
     return null;
   }
@@ -70,11 +81,10 @@ const getItemsFromQueryString = () => {
 };
 
 const getFeesFromQueryString = () => {
-  const query = window.location.search;
-  if (!query) {
+  const queries = getQueryStringParameters();
+  if (!queries) {
     return null;
   }
-  const queries = queryString.parse(query);
 
   const tax = queries['tax'];
   const tip = queries['tip'];
@@ -124,7 +134,6 @@ function Confirm() {
   const history = useHistory();
 
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  // const [slide, setSlide] = React.useState(false);
 
   const {
     fees,
@@ -137,6 +146,11 @@ function Confirm() {
     splitAmount,
   } = useContext(SharedContext);
 
+  // Format prices (OCR input)
+  useEffect(() => {
+    formatItemPricesAndReturnSafeToSave();
+  }, []);
+
   // Populates field with data based on query string
   useEffect(() => {
     setReceiptItems((prev) => {
@@ -146,6 +160,7 @@ function Confirm() {
       }
       return prev;
     });
+
     setFees((prev) => {
       const newFees = getFeesFromQueryString();
       if (newFees) {
@@ -230,32 +245,41 @@ function Confirm() {
     return newPrice;
   };
 
+  const formatItemPricesAndReturnSafeToSave = () => {
+    let canSave = true;
+    const newItems = receiptItems
+        .filter((item) => item.name != '')
+        .map((item) => {
+          let isValid = true;
+
+          // Format receipt prices upon save
+          const newPrice = formatPrice(item.price);
+
+          if (newPrice == '') {
+            canSave = false;
+            isValid = false;
+          }
+          return {...item, isValid, price: newPrice};
+        });
+    setReceiptItems(newItems);
+    return canSave;
+  };
+
+  const formatFeesOnSave = () => {
+    // Format values of tax, tip, misc fees
+    setFees(() => {
+      const newTax = formatPrice(getValidPriceForTotal(fees.tax));
+      const newTip = formatPrice(getValidPriceForTotal(fees.tip));
+      const newMisc = formatPrice(getValidPriceForTotal(fees.misc));
+      return {...fees, tax: newTax, tip: newTip, misc: newMisc};
+    });
+  };
+
   const onToggleEdit = () => {
     let canSave = true;
     if (isEditing) {
-      const newItems = receiptItems
-          .filter((item) => item.name != '')
-          .map((item) => {
-            let isValid = true;
-
-            // Format receipt prices upon save
-            const newPrice = formatPrice(item.price);
-
-            if (newPrice == '') {
-              canSave = false;
-              isValid = false;
-            }
-            return {...item, isValid, price: newPrice};
-          });
-      setReceiptItems(newItems);
-
-      // Format values of tax, tip, misc fees
-      setFees(() => {
-        const newTax = formatPrice(getValidPriceForTotal(fees.tax));
-        const newTip = formatPrice(getValidPriceForTotal(fees.tip));
-        const newMisc = formatPrice(getValidPriceForTotal(fees.misc));
-        return {...fees, tax: newTax, tip: newTip, misc: newMisc};
-      });
+      canSave = formatItemPricesAndReturnSafeToSave();
+      formatFeesOnSave();
 
       if (canSave) {
         setIsEditing(false);
