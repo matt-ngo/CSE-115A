@@ -26,14 +26,6 @@ export const isValidPrice = (stringToTest) => {
   return /^\d*\.{0,1}\d{0,2}$/.test(stringToTest);
 };
 
-const calculateTip = (subtotal, tipValue, tipType) => {
-  if (tipType == '%') {
-    return (tipValue / 100.0) * subtotal;
-  } else {
-    return tipValue;
-  }
-};
-
 const getQueryStringParameters = () => {
   const query = window.location.search;
   if (!query) {
@@ -99,29 +91,49 @@ const getFeesFromQueryString = () => {
 
 // Makes NaN values calculable for totals
 // Useful for user responsiveness on price changes
-const getValidPriceForTotal = (price) => {
-  return price && price !== '.' ? price : '0';
-};
-
-const calculateTotal = (items, fees) => {
-  let total = 0;
-  items.forEach((item) => {
-    const price = getValidPriceForTotal(item.price);
-    total += parseFloat(price);
-  });
-  const tip = getValidPriceForTotal(fees.tip);
-  const tax = getValidPriceForTotal(fees.tax);
-  const misc = getValidPriceForTotal(fees.misc);
-
-  total += calculateTip(total, parseFloat(tip), fees.tipType);
-  total += parseFloat(tax) + parseFloat(misc);
-
-  return total.toFixed(2);
+const parsePriceToFloat = (price) => {
+  return price && price !== '.' ? parseFloat(price) : 0;
 };
 
 const round = (num) => {
   // using default JS round to the nearest integer
   return Math.round((num + Number.EPSILON) * 100) / 100;
+};
+
+const formatPrice = (price) => {
+  return round(parsePriceToFloat(price)).toFixed(2);
+};
+
+const calculateFee = (subtotal, value, feeType) => {
+  let dollars = parsePriceToFloat(value);
+  if (feeType === '%') {
+    dollars *= subtotal / 100.0;
+  }
+  return round(dollars);
+};
+
+const calculateNewFees = (items, fees) => {
+  const newFees = {...fees};
+
+  let subtotal = 0;
+  items.forEach((item) => {
+    subtotal += parsePriceToFloat(item.price);
+  });
+  newFees.subtotal = subtotal.toFixed(2);
+
+  const tax = calculateFee(subtotal, newFees.taxField, newFees.taxType);
+  newFees.tax = tax.toFixed(2);
+
+  const tip = calculateFee(subtotal, newFees.tipField, newFees.tipType);
+  newFees.tip = tip.toFixed(2);
+
+  const misc = calculateFee(subtotal, newFees.miscField, newFees.miscType);
+  newFees.misc = misc.toFixed(2);
+
+  const total = subtotal + tax + tip + misc;
+  newFees.total = total.toFixed(2);
+
+  return isNaN(total) ? null : newFees;
 };
 
 /**
@@ -173,59 +185,55 @@ function Confirm() {
   // Updates totals when items are edited
   useEffect(() => {
     setFees((prev) => {
-      const newTotal = calculateTotal(receiptItems, fees);
-      if (isNaN(newTotal)) {
-        return prev;
-      }
-      return {...prev, total: newTotal};
+      const newFees = calculateNewFees(receiptItems, fees);
+      return newFees === null ? prev : newFees;
     });
 
     setSplitAmount((prev) => {
       const newSplitAmount = calculateSplit(receiptItems, fees);
 
-      if (!isNaN(newSplitAmount) && newSplitAmount !== prev) {
-        return newSplitAmount;
-      }
-      return prev;
+      return isNaN(newSplitAmount) ? prev : newSplitAmount;
     });
   }, [receiptItems]);
 
   const calculateSplit = (items, fees) => {
+    const total = parsePriceToFloat(fees.subtotal);
+    if (total === 0) {
+      return 0;
+    }
+
     let selected = 0;
-    let total = 0;
     items.forEach((item) => {
       if (item.isSelected) {
-        selected += round(
-            parseFloat(getValidPriceForTotal(item.price)) / item.shared,
-        );
+        selected += round(parsePriceToFloat(item.price) / item.shared);
       }
-      total += parseFloat(item.price);
     });
 
-    const percentage = total === 0 ? 0 : selected / total;
+    const percentage = selected / total;
     // calc and add fraction of tax and tip
-    selected += round(percentage * parseFloat(fees.tax).toFixed(2));
-    selected += round(
-        percentage *
-        calculateTip(total, parseFloat(fees.tip), fees.tipType).toFixed(2),
-    );
-    selected += round(percentage * parseFloat(fees.misc).toFixed(2));
+    selected += round(percentage * parseFloat(fees.tax));
+    selected += round(percentage * parseFloat(fees.tip));
+    selected += round(percentage * parseFloat(fees.misc));
 
     return round(selected);
   };
 
   const onFeesChange = (event, key) => {
-    const newFees = {...fees};
-    if (key !== 'tipType' && !isValidPrice(event.target.value)) {
+    let newFees = {...fees};
+
+    const isFeeType =
+      key === 'taxType' || key === 'tipType' || key === 'miscType';
+
+    if (!isFeeType && !isValidPrice(event.target.value)) {
       return;
     }
     newFees[key] = event.target.value;
 
-    const newTotal = calculateTotal(receiptItems, newFees);
-    if (!isNaN(newTotal)) {
-      newFees.total = newTotal;
+    newFees = calculateNewFees(receiptItems, newFees);
+
+    if (newFees !== null) {
+      setFees(newFees);
     }
-    setFees(newFees);
   };
 
   const handleAddItemClick = () => {
@@ -234,15 +242,6 @@ function Confirm() {
 
   const handleDeleteAllClick = () => {
     setReceiptItems([]);
-  };
-
-  const formatPrice = (price) => {
-    let newPrice = price === '.' ? '' : price;
-    if (newPrice) {
-      newPrice = parseFloat(price);
-      newPrice = newPrice.toFixed(2);
-    }
-    return newPrice;
   };
 
   const formatItemPricesAndReturnSafeToSave = () => {
@@ -268,10 +267,11 @@ function Confirm() {
   const formatFeesOnSave = () => {
     // Format values of tax, tip, misc fees
     setFees(() => {
-      const newTax = formatPrice(getValidPriceForTotal(fees.tax));
-      const newTip = formatPrice(getValidPriceForTotal(fees.tip));
-      const newMisc = formatPrice(getValidPriceForTotal(fees.misc));
-      return {...fees, tax: newTax, tip: newTip, misc: newMisc};
+      const newFees = {...fees};
+      newFees.taxField = formatPrice(fees.taxField);
+      newFees.tipField = formatPrice(fees.tipField);
+      newFees.miscField = formatPrice(fees.miscField);
+      return newFees;
     });
   };
 
