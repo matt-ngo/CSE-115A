@@ -57,11 +57,15 @@ const getShareLink = () => {
   }
 
   // Add fees to the link
-  newLink += `&tax=${encodeURIComponent(fees.tax)}&tip=${encodeURIComponent(
-      fees.tip,
+  newLink += `&tax=${encodeURIComponent(
+      fees.taxField,
+  )}&tax_type=${encodeURIComponent(fees.taxType)}&tip=${encodeURIComponent(
+      fees.tipField,
   )}&tip_type=${encodeURIComponent(
       fees.tipType,
-  )}&misc_fees=${encodeURIComponent(fees.misc)}`;
+  )}&misc_fees=${encodeURIComponent(
+      fees.miscField,
+  )}&misc_type=${encodeURIComponent(fees.miscType)}`;
 
   return newLink;
 };

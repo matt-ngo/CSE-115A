@@ -87,17 +87,7 @@ function ReceiptRow(props) {
 
   if (isEditing) {
     return (
-      <TableRow
-        style={
-          !item.isValid ?
-            {
-              borderStyle: 'dashed',
-              borderColor: '#e36862',
-              boxSizing: 'border-box',
-            } :
-            {}
-        }
-      >
+      <TableRow className={!item.isValid ? classes.invalidItemBoxOutline : {}}>
         {/* Checkbox */}
         <TableCell className={classes.selectBox}>
           {isEditing ? null : (
