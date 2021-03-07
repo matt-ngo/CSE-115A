@@ -74,6 +74,7 @@ function ReceiptRow(props) {
   const addShareClick = (idx) => {
     const newItems = [...receiptItems];
     newItems[idx].shared++;
+    newItems[idx].isSelected = true;
     setReceiptItems(newItems);
   };
 
