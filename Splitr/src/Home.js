@@ -196,7 +196,7 @@ function Home() {
                       setIsEditing(true);
                       history.push('/confirm');
                     }}
-                    disabled={loading}
+                    disabled={uploading || loading}
                   >
                     Input Manually
                   </Button>
@@ -208,6 +208,7 @@ function Home() {
                       startIcon={<CameraAltOutlinedIcon />}
                       onClick={onImageUpload}
                       {...dragProps}
+                      disabled={uploading}
                     >
                       Upload a Receipt
                     </Button>
